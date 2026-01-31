@@ -149,6 +149,28 @@ stylized clouds above, educational diagram showing traffic flow, Edo period aest
 - Add: "elegant figures", "refined patterns", "sophisticated composition"
 - Best for: user personas, service design, human-centered concepts
 
+## Concept Difficulty Guide
+
+Ukiyo-e's bold compositional vocabulary handles most concepts well. Watch for these:
+
+| Concept Type | Difficulty | Stronger Metaphor Strategy |
+|-------------|-----------|---------------------------|
+| Flow/pipeline | Easy | River system with boats carrying cargo through processing stations |
+| Hierarchy/levels | Easy | Mountain with distinct plateaus, or multi-story castle — natural Ukiyo-e subject |
+| Management/orchestration | Easy | Samurai general commanding troops with war fan — strong cultural fit |
+| Cycles | Easy | Seasonal motifs, circular wave patterns |
+| Factory/production | Medium | Nighttime workshop with lanterns, craftsmen at stations — add moon for "overnight" |
+| Networks/connections | Medium | Bridges between islands, cranes carrying messages between groups |
+| Freedom/rebellion | Easy | Pirate ships, breaking waves, warriors breaking through barriers |
+
+**Key rule:** Ukiyo-e excels at hierarchy and command structures. Use military/samurai metaphors for management and orchestration concepts.
+
+## Prompt Suffix
+
+**Always end every prompt with:** `no text, no labels, no words, no letters, no writing, no captions, no signs, purely visual`
+
+**Avoid these words** in prompts (they cause AI to bake in garbled text): `infographic`, `diagram`, `educational`, `chart`, `annotated`
+
 ## Anti-patterns (Avoid)
 
 - Photorealistic rendering

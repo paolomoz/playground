@@ -21,13 +21,15 @@ Generate stylized infographics from concepts and ideas using Google Imagen 4.
 
 When transforming concepts into visual prompts:
 
-- Lead with the artistic style and medium
-- Convert abstract ideas into concrete visual metaphors
+- Lead with the artistic style and medium (use "illustration" not "infographic")
+- Convert abstract ideas into concrete visual metaphors — check the style guide's **Concept Difficulty Guide** for harder concepts
 - Describe composition and spatial arrangement
 - Include style-specific visual vocabulary from the style guide
 - Specify mood, lighting, and color treatment per style
 - Keep prompts focused: one clear visual concept per image
-- **Always end prompts with**: "no text, no labels, no words, no letters, no writing, no captions" — all text is added via `overlay_text.py`
+- For hard-to-visualize concepts (hierarchy, management, production), always include **human figures** in the prompt
+- **Never use these words** (they cause AI to generate garbled text): `infographic`, `diagram`, `educational`, `chart`, `annotated`
+- **Always end prompts with**: "no text, no labels, no words, no letters, no writing, no captions, no signs, purely visual"
 
 ## Available Styles
 
@@ -76,12 +78,30 @@ python3 scripts/overlay_text.py input.png --config overlays.json --output final.
 - **Drop shadow**: `--shadow` (or `"shadow": true` in JSON)
 - **Background box**: `--bg-color "#00000088"` (semi-transparent rounded rect behind text)
 
+**Style presets** (recommended — auto-configures fonts, colors, and readability):
+```bash
+# Use style preset — automatically picks appropriate fonts and colors
+python3 scripts/overlay_text.py input.png --config-json '[
+  {"text": "Title", "position": "top-center", "font_size": 72, "style": "ukiyo-e"},
+  {"text": "Subtitle", "position": "bottom-center", "font_size": 32, "style": "ukiyo-e"}
+]' --output final.png
+```
+
+Available presets: `ukiyo-e`, `art-nouveau`
+
+**Auto-color:** Automatically picks light or dark text based on image brightness at the overlay position:
+```bash
+python3 scripts/overlay_text.py input.png --text "Title" --auto-color --output final.png
+```
+
 **Font recommendations by style:**
-| Style | Recommended Font | Weight |
-|-------|-----------------|--------|
-| Ukiyo-e | `avenir-next` | `bold` |
-| Art Nouveau | `palatino` | `bold` or `italic` |
-| Modern/Clean | `helvetica-neue` | `medium` or `bold` |
+| Style | Title Font | Subtitle Font | Notes |
+|-------|-----------|---------------|-------|
+| Ukiyo-e | `copperplate` bold | `avenir-next` medium | Copperplate has an engraved quality; Avenir is clean |
+| Art Nouveau | `didot` bold | `baskerville` italic | Didot's high contrast fits Mucha aesthetic; Baskerville is elegant |
+| Modern/Clean | `helvetica-neue` bold | `helvetica-neue` medium | Clean and neutral |
+
+**Additional fonts available:** `cochin`, `bodoni`, `charter`, `brush-script`, `snell-roundhand`, `zapfino`
 
 **Text wrapping:** Use `--max-width 800` (or `"max_width": 800` in JSON) to auto-wrap text to a pixel width.
 
@@ -91,4 +111,4 @@ python3 scripts/overlay_text.py input.png --config overlays.json --output final.
 
 **Visual concept**: Services as distinct islands connected by bridges (API calls), with data flowing as boats/messengers between them
 
-**Ukiyo-e prompt**: "Ukiyo-e woodblock print style infographic, floating islands connected by arched wooden bridges, small boats carrying scrolls traveling between islands, each island has a distinct pagoda representing a service, waves below suggest data flow, bold black outlines, flat color areas in indigo blue and vermillion red, traditional Japanese cloud patterns, horizontal composition, educational diagram aesthetic"
+**Ukiyo-e prompt**: "Ukiyo-e woodblock print style illustration, floating islands connected by arched wooden bridges, small boats carrying scrolls traveling between islands, each island has a distinct pagoda representing a service, waves below suggest data flow, bold black sumi outlines, flat color areas in indigo blue and vermillion red, traditional Japanese cloud patterns, horizontal composition, no text, no labels, no words, no letters, no writing, no captions, no signs, purely visual"

@@ -189,6 +189,28 @@ stained glass luminosity effect, elegant organic curves
 - Add: "William Morris pattern", "dense interlocking botanical motifs", "medieval influence"
 - Best for: networks, ecosystems, interconnected systems
 
+## Concept Difficulty Guide
+
+Some abstract concepts are harder to visualize in Art Nouveau. Use these stronger metaphor strategies:
+
+| Concept Type | Difficulty | Stronger Metaphor Strategy |
+|-------------|-----------|---------------------------|
+| Flow/pipeline | Easy | Flowing water through ornate archways — maps naturally to sinuous lines |
+| Growth/evolution | Easy | Vine/tree with distinct bloom stages — core Art Nouveau vocabulary |
+| Hierarchy/levels | **Hard** | Use a staircase with ornate railings, or distinct floors of an Art Nouveau building (Gaudi). Avoid generic "growing tree" — too subtle for distinct levels |
+| Management/orchestration | **Hard** | Use a Mucha-style central figure with radiating golden threads to smaller worker figures. Must include human figures — without them the concept is lost |
+| Factory/production | **Hard** | Use an enchanted workshop with artisan figures, glowing forges, and ornate machinery. Pure nature metaphors (tree + fruit) are too abstract for "factory" |
+| Networks/connections | Medium | Intertwining root systems or vine networks — use density to show interconnection |
+| Cycles | Easy | Circular floral wreaths, four-seasons motifs |
+
+**Key rule:** When a concept is marked **Hard**, always include stylized human figures in the prompt. Art Nouveau's strength is elegant figurative art — use it.
+
+## Prompt Suffix
+
+**Always end every prompt with:** `no text, no labels, no words, no letters, no writing, no captions, no signs, purely visual`
+
+**Avoid these words** in prompts (they cause AI to bake in garbled text): `infographic`, `diagram`, `educational`, `chart`, `annotated`
+
 ## Anti-patterns (Avoid)
 
 - Sharp geometric angles (except in Klimt substyle)

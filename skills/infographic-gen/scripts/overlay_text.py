@@ -56,13 +56,34 @@ FONT_MAP = {
     "avenir-bold": "Avenir-Black.ttc",
     "avenir-medium": "Avenir-Medium.ttc",
     "avenir-light": "Avenir-Light.ttc",
-    # Serif
+    # Serif — classic
     "palatino": "Palatino.ttc",
     "palatino-bold": "Palatino Bold.ttc",
     "palatino-italic": "Palatino Italic.ttc",
     "times": "Times New Roman.ttf",
     "times-bold": "Times New Roman Bold.ttf",
     "times-italic": "Times New Roman Italic.ttf",
+    # Serif — elegant (Art Nouveau recommended)
+    "didot": "Didot.ttc",
+    "didot-bold": "Didot.ttc",
+    "didot-italic": "Didot.ttc",
+    "baskerville": "Baskerville.ttc",
+    "baskerville-bold": "Baskerville.ttc",
+    "baskerville-italic": "Baskerville.ttc",
+    "cochin": "Cochin.ttc",
+    "cochin-bold": "Cochin.ttc",
+    "cochin-italic": "Cochin.ttc",
+    "bodoni": "Bodoni 72.ttc",
+    "bodoni-bold": "Bodoni 72.ttc",
+    "charter": "Charter.ttc",
+    "charter-bold": "Charter.ttc",
+    # Display — calligraphic / brush (Ukiyo-e recommended)
+    "copperplate": "Copperplate.ttc",
+    "copperplate-bold": "Copperplate.ttc",
+    "brush-script": "Brush Script.ttf",
+    "snell-roundhand": "SnellRoundhand.ttc",
+    "snell-roundhand-bold": "SnellRoundhand.ttc",
+    "zapfino": "Zapfino.ttf",
 }
 
 # Weight suffixes used by resolve_font
@@ -84,6 +105,7 @@ class TextOverlay:
     font_weight: Optional[str] = None
     font_size: int = 48
     color: str = "white"
+    auto_color: bool = False  # auto-pick light/dark based on image brightness
     # Outline
     outline_color: Optional[str] = None
     outline_width: int = 2
@@ -98,6 +120,72 @@ class TextOverlay:
     bg_radius: int = 12
     # Wrapping
     max_width: Optional[int] = None
+    # Style preset (applies defaults for a given art style)
+    style: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# Style presets — auto-configure font/color/readability per art style
+# ---------------------------------------------------------------------------
+
+STYLE_PRESETS = {
+    "ukiyo-e": {
+        "title": {
+            "font": "copperplate",
+            "font_weight": "bold",
+            "color": "white",
+            "outline_color": "#1a1a2e",
+            "outline_width": 4,
+            "shadow": True,
+            "shadow_color": "#00000066",
+            "shadow_blur": 8,
+        },
+        "subtitle": {
+            "font": "avenir-next",
+            "font_weight": "medium",
+            "color": "white",
+            "shadow": True,
+            "bg_color": "#1a1a2eCC",
+            "bg_padding": 18,
+            "bg_radius": 4,
+        },
+    },
+    "art-nouveau": {
+        "title": {
+            "font": "didot",
+            "font_weight": "bold",
+            "color": "white",
+            "outline_color": "#2a1a0a",
+            "outline_width": 4,
+            "shadow": True,
+            "shadow_color": "#2a1a0a66",
+            "shadow_blur": 8,
+        },
+        "subtitle": {
+            "font": "baskerville",
+            "font_weight": "italic",
+            "color": "white",
+            "shadow": True,
+            "bg_color": "#2a1a0aCC",
+            "bg_padding": 18,
+            "bg_radius": 10,
+        },
+    },
+}
+
+
+def apply_style_preset(overlay: TextOverlay, role: str = "title") -> TextOverlay:
+    """Apply a style preset to an overlay, filling in unset defaults."""
+    if not overlay.style or overlay.style not in STYLE_PRESETS:
+        return overlay
+    preset = STYLE_PRESETS[overlay.style].get(role, {})
+    # Only apply preset values for fields the user didn't explicitly set
+    # We detect "not explicitly set" by checking against TextOverlay defaults
+    defaults = TextOverlay(text="")
+    for key, value in preset.items():
+        if getattr(overlay, key) == getattr(defaults, key):
+            object.__setattr__(overlay, key, value)
+    return overlay
 
 
 # ---------------------------------------------------------------------------
@@ -113,6 +201,18 @@ def parse_color(color_str: str):
     if s.startswith("#") and len(s) == 9:  # #RRGGBBAA
         return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16), int(s[7:9], 16))
     return s
+
+
+def sample_brightness(image: "Image.Image", x: int, y: int, radius: int = 60) -> float:
+    """Sample average brightness (0-255) in a region around (x, y)."""
+    w, h = image.size
+    left = max(0, x - radius)
+    top = max(0, y - radius)
+    right = min(w, x + radius)
+    bottom = min(h, y + radius)
+    region = image.crop((left, top, right, bottom)).convert("L")
+    pixels = list(region.getdata())
+    return sum(pixels) / len(pixels) if pixels else 128.0
 
 
 # ---------------------------------------------------------------------------
@@ -227,8 +327,13 @@ def wrap_text(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> str:
 # ---------------------------------------------------------------------------
 
 
-def render_text_overlay(image: Image.Image, overlay: TextOverlay) -> Image.Image:
+def render_text_overlay(
+    image: Image.Image, overlay: TextOverlay, role: str = "title"
+) -> Image.Image:
     """Draw a single text overlay element onto the image and return it."""
+    # Apply style preset if specified
+    overlay = apply_style_preset(overlay, role)
+
     image = image.copy().convert("RGBA")
     font = resolve_font(overlay.font, overlay.font_weight, overlay.font_size)
 
@@ -238,7 +343,20 @@ def render_text_overlay(image: Image.Image, overlay: TextOverlay) -> Image.Image
         text = wrap_text(text, font, overlay.max_width)
 
     (x, y), anchor = resolve_position(overlay.position, image.size)
-    color = parse_color(overlay.color)
+
+    # Auto-color: sample brightness at position and pick light or dark
+    if overlay.auto_color:
+        brightness = sample_brightness(image, x, y)
+        if brightness > 128:
+            color = parse_color("#1a1a2e")
+            if not overlay.outline_color:
+                overlay.outline_color = "white"
+        else:
+            color = parse_color("white")
+            if not overlay.outline_color:
+                overlay.outline_color = "#1a1a2e"
+    else:
+        color = parse_color(overlay.color)
 
     # --- Background box ---
     if overlay.bg_color:
@@ -322,8 +440,9 @@ def overlay_text(
 
     image = Image.open(src).convert("RGBA")
 
-    for ov in overlays:
-        image = render_text_overlay(image, ov)
+    for i, ov in enumerate(overlays):
+        role = "title" if i == 0 else "subtitle"
+        image = render_text_overlay(image, ov, role=role)
 
     if output_path is None:
         output_path = str(src.with_stem(f"{src.stem}_text"))
@@ -372,6 +491,17 @@ def main():
     )
     parser.add_argument("--bg-color", default=None, help="Background box color")
     parser.add_argument("--max-width", type=int, default=None, help="Wrap width in px")
+    parser.add_argument(
+        "--style",
+        default=None,
+        choices=list(STYLE_PRESETS.keys()),
+        help="Style preset (auto-configures font/color/readability)",
+    )
+    parser.add_argument(
+        "--auto-color",
+        action="store_true",
+        help="Auto-pick light/dark text based on image brightness",
+    )
 
     # Multi-element modes
     parser.add_argument(
@@ -405,11 +535,13 @@ def main():
                 font_weight=args.font_weight,
                 font_size=args.font_size,
                 color=args.color,
+                auto_color=args.auto_color,
                 outline_color=args.outline_color,
                 outline_width=args.outline_width,
                 shadow=args.shadow,
                 bg_color=args.bg_color,
                 max_width=args.max_width,
+                style=args.style,
             )
         ]
     else:
