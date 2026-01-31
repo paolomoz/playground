@@ -1,11 +1,11 @@
 ---
 name: infographic-gen
-description: Generate artistic infographics from concepts, ideas, or text content. Transforms user input into stylized visual representations using Google Imagen 3. Use when user asks to create infographics, visual explanations, concept illustrations, or artistic representations of ideas. Supports multiple art styles including Ukiyo-e Japanese woodblock prints. Triggers on requests like "create an infographic about...", "visualize this concept", "make an illustration of...", or "generate an image explaining...".
+description: Generate artistic infographics from concepts, ideas, or text content. Transforms user input into stylized visual representations using Google Imagen 4. Use when user asks to create infographics, visual explanations, concept illustrations, or artistic representations of ideas. Supports multiple art styles including Ukiyo-e Japanese woodblock prints. Triggers on requests like "create an infographic about...", "visualize this concept", "make an illustration of...", or "generate an image explaining...".
 ---
 
 # Infographic Generator
 
-Generate stylized infographics from concepts and ideas using Google Imagen 3.
+Generate stylized infographics from concepts and ideas using Google Imagen 4.
 
 ## Workflow
 
