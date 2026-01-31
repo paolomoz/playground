@@ -12,7 +12,7 @@ Generate stylized infographics from concepts and ideas using Google Imagen 4.
 1. **Analyze content**: Extract key concepts, relationships, and visual metaphors from user input
 2. **Select style**: Check `references/styles/` for available styles. Default to Ukiyo-e if unspecified
 3. **Load style guide**: Read the appropriate style file (e.g., `references/styles/ukiyo-e.md`)
-4. **Craft prompt**: Transform content into an image generation prompt following style guidelines. **Avoid including text or labels in the prompt** — these will be added cleanly in the overlay step
+4. **Craft prompt**: Transform content into an image generation prompt following style guidelines. **Always append "no text, no labels, no words, no letters, no writing, no captions" to every prompt** — all typography is added cleanly in the overlay step
 5. **Generate image**: Run `scripts/generate_imagen.py` with the crafted prompt
 6. **Overlay text**: Run `scripts/overlay_text.py` to add titles, labels, and captions with clean, readable typography (see Text Overlay Usage below)
 7. **Deliver**: Present the generated image to the user
@@ -27,6 +27,7 @@ When transforming concepts into visual prompts:
 - Include style-specific visual vocabulary from the style guide
 - Specify mood, lighting, and color treatment per style
 - Keep prompts focused: one clear visual concept per image
+- **Always end prompts with**: "no text, no labels, no words, no letters, no writing, no captions" — all text is added via `overlay_text.py`
 
 ## Available Styles
 
