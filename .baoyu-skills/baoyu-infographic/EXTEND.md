@@ -9,3 +9,4 @@ Available custom styles:
 - `ukiyo-e` — Japanese woodblock print aesthetic (Edo period)
 - `art-nouveau` — Flowing organic lines, natural forms, elegant ornamentation (1890-1910)
 - `bauhaus` — Systematic geometric design, primary colors, functional clarity (1919-1933)
+- `sumi-e` — Black ink brush strokes on rice paper, misty landscapes, zen minimalism
