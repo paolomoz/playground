@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KION Group — Website Migration Estimate</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --border: #dee2e6;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --accent: #0d6efd;
+      --accent-light: #e7f1ff;
+      --kion: #003369;
+      --still: #e30613;
+      --baoli: #f39200;
+      --linde: #009640;
+      --grand: #6f42c1;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #003369 0%, #0d6efd 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Summary cards */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--border);
+      text-align: center;
+    }
+
+    .summary-card.kion  { border-top-color: var(--kion); }
+    .summary-card.still  { border-top-color: var(--still); }
+    .summary-card.baoli  { border-top-color: var(--baoli); }
+    .summary-card.linde  { border-top-color: var(--linde); }
+    .summary-card.grand  { border-top-color: var(--grand); }
+
+    .summary-card .brand { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .summary-card .number { font-size: 2rem; font-weight: 700; }
+    .summary-card .detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .summary-card.kion  .number { color: var(--kion); }
+    .summary-card.still  .number { color: var(--still); }
+    .summary-card.baoli  .number { color: var(--baoli); }
+    .summary-card.linde  .number { color: var(--linde); }
+    .summary-card.grand  .number { color: var(--grand); }
+
+    /* Sections */
+    .brand-section {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .brand-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-section h2 .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .brand-section .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+    }
+
+    td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .note {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .tag.low  { background: #198754; }
+    .tag.high { background: #dc3545; }
+    .tag.med  { background: #fd7e14; }
+
+    /* Bar chart */
+    .bar-chart {
+      margin: 1.5rem 0;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      gap: 0.75rem;
+    }
+
+    .bar-label {
+      width: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 6px;
+      height: 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      transition: width 0.6s ease;
+    }
+
+    .bar-fill.kion  { background: var(--kion); }
+    .bar-fill.still  { background: var(--still); }
+    .bar-fill.baoli  { background: var(--baoli); }
+    .bar-fill.linde  { background: var(--linde); }
+
+    /* Domain list */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .domain-grid code {
+      background: var(--bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    .takeaways {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .takeaways ul {
+      padding-left: 1.25rem;
+    }
+
+    .takeaways li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.5rem; }
+      .container { padding: 1rem; }
+      .brand-section { padding: 1.25rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.4rem 0.5rem; }
+      .bar-label { width: 70px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>KION Group — Website Migration Estimate</h1>
+  <p>Page count analysis across all 4 brands for Experience Modernization Agent scoping</p>
+</div>
+
+<div class="container">
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="summary-card kion">
+      <div class="brand">KION Group</div>
+      <div class="number">2,500–3,600</div>
+      <div class="detail">1 domain + reports subdomain</div>
+    </div>
+    <div class="summary-card still">
+      <div class="brand">STILL</div>
+      <div class="number">30,000–38,000</div>
+      <div class="detail">60+ country domains</div>
+    </div>
+    <div class="summary-card baoli">
+      <div class="brand">Baoli</div>
+      <div class="number">1,100–1,400</div>
+      <div class="detail">1 domain, 23 locales</div>
+    </div>
+    <div class="summary-card linde">
+      <div class="brand">Linde MH</div>
+      <div class="number">4,000–5,000</div>
+      <div class="detail">20–28 country domains</div>
+    </div>
+    <div class="summary-card grand">
+      <div class="brand">Grand Total</div>
+      <div class="number">37,600–48,000</div>
+      <div class="detail">All brands combined</div>
+    </div>
+  </div>
+
+  <!-- Visual comparison -->
+  <div class="brand-section">
+    <h2>Page Volume Comparison (mid-range estimates)</h2>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">STILL</div>
+        <div class="bar-track"><div class="bar-fill still" style="width:100%">~34,000</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Linde MH</div>
+        <div class="bar-track"><div class="bar-fill linde" style="width:13.2%">~4,500</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">KION Group</div>
+        <div class="bar-track"><div class="bar-fill kion" style="width:9%">~3,050</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Baoli</div>
+        <div class="bar-track"><div class="bar-fill baoli" style="width:3.7%">~1,250</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain complexity -->
+  <div class="brand-section">
+    <h2>Domain Strategy Overview</h2>
+    <table>
+      <thead>
+        <tr><th>Brand</th><th>Strategy</th><th>Domains / Locales</th><th>Complexity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>KION Group</strong></td><td>Single domain + reports subdomain</td><td>1 domain, 2 languages</td><td><span class="tag low">Low</span></td></tr>
+        <tr><td><strong>Baoli</strong></td><td>Single domain, locale prefixes</td><td>1 domain, 23 locales</td><td><span class="tag low">Low</span></td></tr>
+        <tr><td><strong>Linde MH</strong></td><td>Country-specific domains</td><td>~20–28 domains</td><td><span class="tag med">High</span></td></tr>
+        <tr><td><strong>STILL</strong></td><td>Country-specific domains</td><td>~60+ domains</td><td><span class="tag high">Very High</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- KION Group -->
+  <div class="brand-section">
+    <h2><span class="dot" style="background:var(--kion)"></span> KION Group</h2>
+    <div class="subtitle">kiongroup.com — Corporate website with investor relations focus</div>
+
+    <table>
+      <thead><tr><th>Scope</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td>www.kiongroup.com (EN)</td><td class="num">630 – 900</td></tr>
+        <tr><td>www.kiongroup.com (DE)</td><td class="num">500 – 750</td></tr>
+        <tr><td>Chinese Microsite</td><td class="num">1</td></tr>
+        <tr><td>reports.kiongroup.com (annual, quarterly, sustainability)</td><td class="num">1,350 – 1,950</td></tr>
+        <tr><td><strong>Total</strong></td><td class="num"><strong>2,500 – 3,600</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Content Breakdown (EN version)</h3>
+    <table>
+      <thead><tr><th>Category</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td>Corporate / About Us (incl. 35 location pages)</td><td class="num">~43</td></tr>
+        <tr><td>News &amp; Stories (press releases + stories)</td><td class="num">300 – 370</td></tr>
+        <tr><td>Investor Relations (financial news)</td><td class="num">210 – 310</td></tr>
+        <tr><td>Careers (section + job listings)</td><td class="num">60 – 160</td></tr>
+        <tr><td>Landing Pages / Microsites</td><td class="num">~10</td></tr>
+        <tr><td>Service / Utility Pages</td><td class="num">~6</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      The reports subdomain (reports.kiongroup.com) is significant — the 2024 Annual Report alone has ~95 HTML pages. 11 years of annual reports + 40+ quarterly statements add up to 1,350–1,950 pages. Clarify if these are in scope.
+    </div>
+  </div>
+
+  <!-- STILL -->
+  <div class="brand-section">
+    <h2><span class="dot" style="background:var(--still)"></span> STILL</h2>
+    <div class="subtitle">60+ country domains — The largest brand by far (~80% of total volume)</div>
+
+    <h3>Sampled Sites (actual sitemap data)</h3>
+    <table>
+      <thead><tr><th>Domain</th><th>Country</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td><code>still.es</code></td><td>Spain</td><td class="num">1,089</td></tr>
+        <tr><td><code>still.de</code></td><td>Germany</td><td class="num">1,082</td></tr>
+        <tr><td><code>still.co.uk</code></td><td>United Kingdom</td><td class="num">~650</td></tr>
+        <tr><td><code>still.pl</code></td><td>Poland</td><td class="num">568</td></tr>
+        <tr><td><code>still.it</code></td><td>Italy</td><td class="num">558</td></tr>
+        <tr><td><code>still.nl</code></td><td>Netherlands</td><td class="num">548</td></tr>
+        <tr><td><code>still.at</code></td><td>Austria</td><td class="num">524</td></tr>
+        <tr><td><code>still.se</code></td><td>Sweden</td><td class="num">452</td></tr>
+        <tr><td><code>still.sa</code></td><td>Saudi Arabia</td><td class="num">447</td></tr>
+        <tr><td><code>still.fr</code></td><td>France</td><td class="num">436</td></tr>
+        <tr><td><code>still.com.br</code></td><td>Brazil</td><td class="num">393</td></tr>
+        <tr><td><code>still.bg</code></td><td>Bulgaria</td><td class="num">373</td></tr>
+        <tr><td><code>still.co.za</code></td><td>South Africa</td><td class="num">304</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Content Breakdown (still.de reference)</h3>
+    <table>
+      <thead><tr><th>Category</th><th style="text-align:right">Pages</th><th style="text-align:right">%</th></tr></thead>
+      <tbody>
+        <tr><td>Vehicles / Products</td><td class="num">536</td><td class="num">49.5%</td></tr>
+        <tr><td>Blog / Content Marketing</td><td class="num">144</td><td class="num">13.3%</td></tr>
+        <tr><td>Careers</td><td class="num">126</td><td class="num">11.6%</td></tr>
+        <tr><td>Company</td><td class="num">91</td><td class="num">8.4%</td></tr>
+        <tr><td>Solution Competence</td><td class="num">89</td><td class="num">8.2%</td></tr>
+        <tr><td>Intralogistics Systems</td><td class="num">38</td><td class="num">3.5%</td></tr>
+        <tr><td>Service</td><td class="num">14</td><td class="num">1.3%</td></tr>
+        <tr><td>News / Press</td><td class="num">4</td><td class="num">0.4%</td></tr>
+        <tr><td>Misc / Landing Pages</td><td class="num">39</td><td class="num">3.6%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Estimated Totals by Market Tier</h3>
+    <table>
+      <thead><tr><th>Tier</th><th>Sites</th><th style="text-align:right">Avg Pages</th><th style="text-align:right">Subtotal</th></tr></thead>
+      <tbody>
+        <tr><td>Tier 1 — Flagship (DE, ES)</td><td>2</td><td class="num">~1,050</td><td class="num">~2,100</td></tr>
+        <tr><td>Tier 2 — Major European (UK, FR, IT, PL, NL, AT)</td><td>6</td><td class="num">~550</td><td class="num">~3,300</td></tr>
+        <tr><td>Tier 3 — Medium markets</td><td>~14</td><td class="num">~450</td><td class="num">~6,300</td></tr>
+        <tr><td>Tier 4 — Smaller / emerging</td><td>~18</td><td class="num">~350</td><td class="num">~6,300</td></tr>
+        <tr><td>Tier 5 — Minimal presence</td><td>~22</td><td class="num">~225</td><td class="num">~4,950</td></tr>
+        <tr><td colspan="3">Multi-language variant adjustment (+15–25%)</td><td class="num">+4,000 – 6,000</td></tr>
+        <tr><td colspan="3"><strong>Total</strong></td><td class="num"><strong>30,000 – 38,000</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      Some domains serve multiple languages (e.g., still.de has /de-DE/ and /en-DE/, still.ch has German + French). Each country domain is a standalone website sharing the same CMS template but with independently managed content.
+    </div>
+  </div>
+
+  <!-- Baoli -->
+  <div class="brand-section">
+    <h2><span class="dot" style="background:var(--baoli)"></span> Baoli</h2>
+    <div class="subtitle">baoli-emea.com — Compact product site, 23 locale versions on a single domain</div>
+
+    <h3>Locale Versions (23 total)</h3>
+    <div class="domain-grid">
+      <div><code>en-EMEA</code> English (Global)</div>
+      <div><code>en-GB</code> United Kingdom</div>
+      <div><code>it-IT</code> Italy</div>
+      <div><code>fr-FR</code> France</div>
+      <div><code>es-ES</code> Spain</div>
+      <div><code>de-DE</code> Germany</div>
+      <div><code>pt-PT</code> Portugal</div>
+      <div><code>de-AT</code> Austria</div>
+      <div><code>bg-BG</code> Bulgaria</div>
+      <div><code>fr-BE</code> Belgium (FR)</div>
+      <div><code>nl-BE</code> Belgium (NL)</div>
+      <div><code>cs-CZ</code> Czech Republic</div>
+      <div><code>da-DK</code> Denmark</div>
+      <div><code>hu-HU</code> Hungary</div>
+      <div><code>nl-NL</code> Netherlands</div>
+      <div><code>no-NO</code> Norway</div>
+      <div><code>pl-PL</code> Poland</div>
+      <div><code>ro-RO</code> Romania</div>
+      <div><code>sk-SK</code> Slovakia</div>
+      <div><code>sv-SE</code> Sweden</div>
+      <div><code>de-CH</code> Switzerland (DE)</div>
+      <div><code>fr-CH</code> Switzerland (FR)</div>
+      <div><code>it-CH</code> Switzerland (IT)</div>
+    </div>
+
+    <h3>Pages Per Locale Version</h3>
+    <table>
+      <thead><tr><th>Category</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td>Core / Structural</td><td class="num">~9</td></tr>
+        <tr><td>Product Categories</td><td class="num">6–7</td></tr>
+        <tr><td>Product Detail Pages</td><td class="num">17–22</td></tr>
+        <tr><td>Legal / Footer</td><td class="num">4</td></tr>
+        <tr><td>News Articles</td><td class="num">3–46 (varies by locale)</td></tr>
+        <tr><td><strong>Per locale subtotal</strong></td><td class="num"><strong>~43–88</strong></td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead><tr><th>Scope</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td>23 locale versions combined</td><td class="num">~1,100 – 1,400</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      No sitemap.xml is published. Built on TYPO3 CMS. The en-EMEA version is the most complete (~88 pages); smaller locales average ~45–50. This is the simplest migration of the four brands.
+    </div>
+  </div>
+
+  <!-- Linde MH -->
+  <div class="brand-section">
+    <h2><span class="dot" style="background:var(--linde)"></span> Linde Material Handling</h2>
+    <div class="subtitle">linde-mh.com + 20–28 country domains — Extensive product catalog with global reach</div>
+
+    <h3>Confirmed Active Domains (18 verified)</h3>
+    <table>
+      <thead><tr><th>Domain</th><th>Country / Region</th></tr></thead>
+      <tbody>
+        <tr><td><code>linde-mh.com/en/</code></td><td>Global (English)</td></tr>
+        <tr><td><code>linde-mh.de</code></td><td>Germany</td></tr>
+        <tr><td><code>linde-mh.co.uk</code></td><td>United Kingdom</td></tr>
+        <tr><td><code>linde-mh.it</code></td><td>Italy</td></tr>
+        <tr><td><code>linde-mh.es</code></td><td>Spain</td></tr>
+        <tr><td><code>linde-mh.at</code></td><td>Austria</td></tr>
+        <tr><td><code>linde-mh.se</code></td><td>Sweden</td></tr>
+        <tr><td><code>linde-mh.cz</code></td><td>Czech Republic</td></tr>
+        <tr><td><code>linde-mh.pl</code></td><td>Poland</td></tr>
+        <tr><td><code>linde-mh.sk</code></td><td>Slovakia</td></tr>
+        <tr><td><code>fenwick-linde.fr</code></td><td>France (Fenwick brand)</td></tr>
+        <tr><td><code>linde-mh.us</code></td><td>North America</td></tr>
+        <tr><td><code>lindemh.com.au</code></td><td>Australia</td></tr>
+        <tr><td><code>linde-mh.com.sg</code></td><td>Singapore / APAC HQ</td></tr>
+        <tr><td><code>lindemh.com.hk</code></td><td>Hong Kong</td></tr>
+        <tr><td><code>lindemhe.com</code></td><td>India</td></tr>
+        <tr><td><code>linde-mh.co.th</code></td><td>Thailand</td></tr>
+        <tr><td><code>lindemh-cn.com</code></td><td>China</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Content Per Country Site</h3>
+    <table>
+      <thead><tr><th>Category</th><th style="text-align:right">Pages</th></tr></thead>
+      <tbody>
+        <tr><td>Products (17 categories + model series + finder)</td><td class="num">45–60</td></tr>
+        <tr><td>Services</td><td class="num">10–15</td></tr>
+        <tr><td>Solutions</td><td class="num">10–15</td></tr>
+        <tr><td>About Us / Company</td><td class="num">15–25</td></tr>
+        <tr><td>Magazine / Case Studies</td><td class="num">20–100</td></tr>
+        <tr><td>Press Releases</td><td class="num">20–150</td></tr>
+        <tr><td>Landing Pages / Campaigns</td><td class="num">10–20</td></tr>
+        <tr><td>Careers</td><td class="num">5–15</td></tr>
+        <tr><td>Utility / Legal</td><td class="num">10–15</td></tr>
+        <tr><td><strong>Per site subtotal</strong></td><td class="num"><strong>145–415</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Estimated Totals</h3>
+    <table>
+      <thead><tr><th>Group</th><th style="text-align:right">Sites</th><th style="text-align:right">Avg Pages</th><th style="text-align:right">Subtotal</th></tr></thead>
+      <tbody>
+        <tr><td>Global English (linde-mh.com)</td><td class="num">1</td><td class="num">400</td><td class="num">350–450</td></tr>
+        <tr><td>Major European (DE, UK, IT, ES, FR, AT, SE, CZ, PL, SK)</td><td class="num">10</td><td class="num">225</td><td class="num">1,500–3,000</td></tr>
+        <tr><td>Asia-Pacific (AU, SG, HK, CN, TH, IN)</td><td class="num">6</td><td class="num">140</td><td class="num">480–1,200</td></tr>
+        <tr><td>North America (linde-mh.us)</td><td class="num">1</td><td class="num">150</td><td class="num">100–200</td></tr>
+        <tr><td>Other probable sites</td><td class="num">5–10</td><td class="num">115</td><td class="num">400–1,500</td></tr>
+        <tr><td colspan="3"><strong>Total</strong></td><td class="num"><strong>4,000 – 5,000</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      France operates under a separate brand (Fenwick-Linde). No public sitemaps found on any Linde MH domain. Product pages consolidate multiple model variants into series-level pages, keeping page counts manageable. Job listings redirect to KION Group Workday portal.
+    </div>
+  </div>
+
+  <!-- Takeaways -->
+  <div class="takeaways">
+    <h2>Key Takeaways for Migration Planning</h2>
+    <ul>
+      <li><strong>STILL dominates at ~80% of total volume</strong> due to 60+ separate country domains, each independently managed.</li>
+      <li><strong>Localization is the multiplier</strong> — core unique content per brand is modest, but replication across dozens of markets drives the total up.</li>
+      <li><strong>Not all pages need equal treatment</strong> — product pages, news/press, and structural pages have very different migration complexity.</li>
+      <li><strong>Consider phased migration</strong> — migrate 1 flagship market per brand first, then replicate the template across remaining locales.</li>
+      <li><strong>Reports subdomain</strong> (reports.kiongroup.com) contains 1,350–1,950 HTML pages of financial reports that may or may not be in scope.</li>
+      <li><strong>Each separate country domain</strong> (STILL, Linde MH) is essentially a standalone project to set up in Edge Delivery Services.</li>
+      <li><strong>Baoli is the quickest win</strong> — a single domain with a compact product catalog, ideal as a pilot migration.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Generated February 2026 — Page counts are estimates based on sitemap analysis, web crawling, and content sampling.
+</footer>
+
+</body>
+</html>
