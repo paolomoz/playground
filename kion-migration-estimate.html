@@ -4,213 +4,289 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KION Group — Website Migration Estimate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f8f9fa;
+      --bg: #faf9f7;
       --surface: #ffffff;
-      --border: #dee2e6;
-      --text: #212529;
-      --text-muted: #6c757d;
-      --accent: #0d6efd;
-      --accent-light: #e7f1ff;
+      --surface-alt: #f4f2ef;
+      --border: #e8e5e0;
+      --border-light: #f0ede8;
+      --text: #1a1a1a;
+      --text-secondary: #52504b;
+      --text-tertiary: #8a8780;
       --kion: #003369;
-      --still: #e30613;
-      --baoli: #f39200;
-      --linde: #009640;
-      --grand: #6f42c1;
+      --still: #c4102a;
+      --baoli: #d97b00;
+      --linde: #00794a;
+      --grand: #1a1a1a;
+      --kion-light: #edf2f8;
+      --still-light: #fcedef;
+      --baoli-light: #fef4e6;
+      --linde-light: #e6f4ee;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* ---- Hero ---- */
     .hero {
-      background: linear-gradient(135deg, #003369 0%, #0d6efd 100%);
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      opacity: 0.85;
-    }
-
-    .container {
-      max-width: 1100px;
+      padding: 6rem 2rem 5rem;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      text-align: left;
     }
 
-    /* Summary cards */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .summary-card {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      border-top: 4px solid var(--border);
-      text-align: center;
-    }
-
-    .summary-card.kion  { border-top-color: var(--kion); }
-    .summary-card.still  { border-top-color: var(--still); }
-    .summary-card.baoli  { border-top-color: var(--baoli); }
-    .summary-card.linde  { border-top-color: var(--linde); }
-    .summary-card.grand  { border-top-color: var(--grand); }
-
-    .summary-card .brand { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
-    .summary-card .number { font-size: 2rem; font-weight: 700; }
-    .summary-card .detail { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
-    .summary-card.kion  .number { color: var(--kion); }
-    .summary-card.still  .number { color: var(--still); }
-    .summary-card.baoli  .number { color: var(--baoli); }
-    .summary-card.linde  .number { color: var(--linde); }
-    .summary-card.grand  .number { color: var(--grand); }
-
-    /* Sections */
-    .brand-section {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .brand-section h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .brand-section h2 .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .brand-section .subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
       margin-bottom: 1.5rem;
     }
 
-    h3 {
-      font-size: 1.1rem;
-      margin: 1.5rem 0 0.75rem;
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.15;
       color: var(--text);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
+    .hero-description {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.7;
     }
 
-    th, td {
-      text-align: left;
-      padding: 0.6rem 0.75rem;
+    .hero-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--text);
+      margin-top: 3rem;
+      border: none;
+    }
+
+    /* ---- Container ---- */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    /* ---- Stat row ---- */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      margin-bottom: 5rem;
+      border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
 
-    th {
-      background: var(--bg);
-      font-weight: 600;
-      font-size: 0.8rem;
+    .stat-item {
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 1.5rem;
+      bottom: 1.5rem;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: var(--text-muted);
+      color: var(--text-tertiary);
+      margin-bottom: 0.6rem;
     }
 
-    td.num {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      font-weight: 600;
+    .stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.55rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
     }
 
-    .note {
-      background: var(--accent-light);
-      border-left: 3px solid var(--accent);
-      padding: 0.75rem 1rem;
-      border-radius: 0 6px 6px 0;
-      font-size: 0.9rem;
-      margin: 1rem 0;
+    .stat-item.kion .stat-number  { color: var(--kion); }
+    .stat-item.still .stat-number { color: var(--still); }
+    .stat-item.baoli .stat-number { color: var(--baoli); }
+    .stat-item.linde .stat-number { color: var(--linde); }
+    .stat-item.grand .stat-number { color: var(--text); }
+
+    .stat-detail {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      margin-top: 0.35rem;
     }
 
-    .tag {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: white;
+    /* ---- Sections ---- */
+    .section {
+      margin-bottom: 4.5rem;
     }
 
-    .tag.low  { background: #198754; }
-    .tag.high { background: #dc3545; }
-    .tag.med  { background: #fd7e14; }
-
-    /* Bar chart */
-    .bar-chart {
-      margin: 1.5rem 0;
+    .section-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-bottom: 0.5rem;
     }
 
-    .bar-row {
+    .section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+      max-width: 640px;
+    }
+
+    .section h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      margin: 2.5rem 0 1rem;
+      color: var(--text);
+    }
+
+    .section-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      border: none;
+      margin-bottom: 4.5rem;
+    }
+
+    /* ---- Brand header ---- */
+    .brand-header {
       display: flex;
       align-items: center;
-      margin-bottom: 0.5rem;
       gap: 0.75rem;
+      margin-bottom: 0.4rem;
     }
 
-    .bar-label {
-      width: 100px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-align: right;
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
       flex-shrink: 0;
     }
 
+    /* ---- Tables ---- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0 0 0.6rem;
+      font-weight: 500;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      border-bottom: 2px solid var(--text);
+    }
+
+    td {
+      text-align: left;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+
+    th:not(:first-child),
+    td.num {
+      text-align: right;
+    }
+
+    td.num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr.total-row td {
+      border-top: 2px solid var(--text);
+      border-bottom: none;
+      font-weight: 600;
+      color: var(--text);
+      padding-top: 0.75rem;
+    }
+
+    td code {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ---- Bar chart ---- */
+    .bar-chart {
+      margin: 2rem 0;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 70px;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+    }
+
+    .bar-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-align: right;
+      color: var(--text-secondary);
+    }
+
     .bar-track {
-      flex: 1;
-      background: var(--bg);
-      border-radius: 6px;
-      height: 28px;
+      height: 36px;
+      background: var(--surface-alt);
+      border-radius: 4px;
       overflow: hidden;
-      position: relative;
     }
 
     .bar-fill {
       height: 100%;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      padding-left: 0.75rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: white;
-      white-space: nowrap;
-      transition: width 0.6s ease;
+      border-radius: 4px;
+      transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .bar-fill.kion  { background: var(--kion); }
@@ -218,136 +294,345 @@
     .bar-fill.baoli  { background: var(--baoli); }
     .bar-fill.linde  { background: var(--linde); }
 
-    /* Domain list */
+    .bar-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* ---- Tags ---- */
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag.low  { background: var(--linde-light); color: var(--linde); }
+    .tag.high { background: var(--still-light); color: var(--still); }
+    .tag.med  { background: var(--baoli-light); color: var(--baoli); }
+
+    /* ---- Callout ---- */
+    .callout {
+      background: var(--surface-alt);
+      padding: 1.25rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 1.5rem 0;
+    }
+
+    .callout strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ---- Domain grid ---- */
     .domain-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 0.4rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.35rem 1.5rem;
       font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .domain-grid div {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border-light);
     }
 
     .domain-grid code {
-      background: var(--bg);
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 0.83rem;
     }
 
+    /* ---- Takeaways ---- */
     .takeaways {
+      margin-bottom: 4.5rem;
+    }
+
+    .takeaways-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .takeaway-item {
+      padding: 1.5rem;
       background: var(--surface);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      border-radius: 6px;
     }
 
-    .takeaways ul {
-      padding-left: 1.25rem;
+    .takeaway-item:first-child {
+      grid-column: 1 / -1;
+      background: var(--text);
+      color: #faf9f7;
+      border-color: var(--text);
     }
 
-    .takeaways li {
+    .takeaway-item:first-child .takeaway-label {
+      color: rgba(250, 249, 247, 0.5);
+    }
+
+    .takeaway-item:first-child .takeaway-text {
+      color: #faf9f7;
+    }
+
+    .takeaway-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
       margin-bottom: 0.5rem;
-      font-size: 0.95rem;
     }
 
+    .takeaway-text {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .takeaway-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .takeaway-item:first-child .takeaway-text strong {
+      color: #faf9f7;
+    }
+
+    /* ---- Footer ---- */
     footer {
       text-align: center;
-      padding: 2rem;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      padding: 3rem 2rem;
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      border-top: 1px solid var(--border);
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 1.5rem; }
-      .container { padding: 1rem; }
-      .brand-section { padding: 1.25rem; }
-      table { font-size: 0.8rem; }
-      th, td { padding: 0.4rem 0.5rem; }
-      .bar-label { width: 70px; font-size: 0.75rem; }
+    /* ---- Animations ---- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero .reveal:nth-child(1) { transition-delay: 0s; }
+    .hero .reveal:nth-child(2) { transition-delay: 0.08s; }
+    .hero .reveal:nth-child(3) { transition-delay: 0.16s; }
+    .hero .reveal:nth-child(4) { transition-delay: 0.24s; }
+
+    .stat-item {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stat-row.visible .stat-item:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+    .stat-row.visible .stat-item:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.06s; }
+    .stat-row.visible .stat-item:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.12s; }
+    .stat-row.visible .stat-item:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.18s; }
+    .stat-row.visible .stat-item:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.24s; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 720px) {
+      .hero { padding: 4rem 1.5rem 3rem; }
+      .container { padding: 0 1.5rem 3rem; }
+
+      .stat-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-item:nth-child(odd):not(:last-child)::after {
+        content: '';
+      }
+
+      .stat-item:nth-child(even)::after {
+        display: none;
+      }
+
+      .stat-item:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .bar-row {
+        grid-template-columns: 70px 1fr 60px;
+      }
+
+      .takeaways-grid {
+        grid-template-columns: 1fr;
+      }
+
+      table { font-size: 0.82rem; }
+      td, th { padding: 0.5rem 0; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+      .container { padding: 0 1.25rem 2rem; }
+
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-item::after {
+        display: none !important;
+      }
+
+      .stat-item {
+        padding: 1.25rem 0;
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .bar-label {
+        text-align: left;
+      }
+
+      .bar-value {
+        display: none;
+      }
+
+      .domain-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
 <div class="hero">
-  <h1>KION Group — Website Migration Estimate</h1>
-  <p>Page count analysis across all 4 brands for Experience Modernization Agent scoping</p>
+  <div class="reveal">
+    <div class="hero-eyebrow">Migration Scope Assessment</div>
+  </div>
+  <div class="reveal">
+    <h1>KION Group<br>Website Migration Estimate</h1>
+  </div>
+  <div class="reveal">
+    <p class="hero-description">Page count analysis across all four KION brands — KION, STILL, Baoli, and Linde Material Handling — for Experience Modernization Agent scoping.</p>
+  </div>
+  <div class="reveal">
+    <hr class="hero-rule">
+  </div>
 </div>
 
 <div class="container">
 
-  <!-- Summary Cards -->
-  <div class="summary-grid">
-    <div class="summary-card kion">
-      <div class="brand">KION Group</div>
-      <div class="number">2,500–3,600</div>
-      <div class="detail">1 domain + reports subdomain</div>
+  <!-- Summary stats -->
+  <div class="stat-row">
+    <div class="stat-item kion">
+      <div class="stat-label">KION Group</div>
+      <div class="stat-number">2,500–3,600</div>
+      <div class="stat-detail">1 domain + reports</div>
     </div>
-    <div class="summary-card still">
-      <div class="brand">STILL</div>
-      <div class="number">30,000–38,000</div>
-      <div class="detail">60+ country domains</div>
+    <div class="stat-item still">
+      <div class="stat-label">STILL</div>
+      <div class="stat-number">30k–38k</div>
+      <div class="stat-detail">60+ country domains</div>
     </div>
-    <div class="summary-card baoli">
-      <div class="brand">Baoli</div>
-      <div class="number">1,100–1,400</div>
-      <div class="detail">1 domain, 23 locales</div>
+    <div class="stat-item baoli">
+      <div class="stat-label">Baoli</div>
+      <div class="stat-number">1,100–1,400</div>
+      <div class="stat-detail">1 domain, 23 locales</div>
     </div>
-    <div class="summary-card linde">
-      <div class="brand">Linde MH</div>
-      <div class="number">4,000–5,000</div>
-      <div class="detail">20–28 country domains</div>
+    <div class="stat-item linde">
+      <div class="stat-label">Linde MH</div>
+      <div class="stat-number">4,000–5,000</div>
+      <div class="stat-detail">20–28 domains</div>
     </div>
-    <div class="summary-card grand">
-      <div class="brand">Grand Total</div>
-      <div class="number">37,600–48,000</div>
-      <div class="detail">All brands combined</div>
+    <div class="stat-item grand">
+      <div class="stat-label">Grand Total</div>
+      <div class="stat-number">37.6k–48k</div>
+      <div class="stat-detail">All brands combined</div>
     </div>
   </div>
 
-  <!-- Visual comparison -->
-  <div class="brand-section">
-    <h2>Page Volume Comparison (mid-range estimates)</h2>
+  <!-- Volume comparison -->
+  <div class="section reveal">
+    <div class="section-number">01</div>
+    <h2>Page Volume Comparison</h2>
+    <p class="section-subtitle">Mid-range estimates across all four brands. STILL accounts for roughly 80% of total page volume.</p>
+
     <div class="bar-chart">
       <div class="bar-row">
         <div class="bar-label">STILL</div>
-        <div class="bar-track"><div class="bar-fill still" style="width:100%">~34,000</div></div>
+        <div class="bar-track"><div class="bar-fill still" data-width="100%"></div></div>
+        <div class="bar-value">~34,000</div>
       </div>
       <div class="bar-row">
         <div class="bar-label">Linde MH</div>
-        <div class="bar-track"><div class="bar-fill linde" style="width:13.2%">~4,500</div></div>
+        <div class="bar-track"><div class="bar-fill linde" data-width="13.2%"></div></div>
+        <div class="bar-value">~4,500</div>
       </div>
       <div class="bar-row">
         <div class="bar-label">KION Group</div>
-        <div class="bar-track"><div class="bar-fill kion" style="width:9%">~3,050</div></div>
+        <div class="bar-track"><div class="bar-fill kion" data-width="9%"></div></div>
+        <div class="bar-value">~3,050</div>
       </div>
       <div class="bar-row">
         <div class="bar-label">Baoli</div>
-        <div class="bar-track"><div class="bar-fill baoli" style="width:3.7%">~1,250</div></div>
+        <div class="bar-track"><div class="bar-fill baoli" data-width="3.7%"></div></div>
+        <div class="bar-value">~1,250</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain complexity -->
-  <div class="brand-section">
+  <!-- Domain strategy -->
+  <div class="section reveal">
+    <div class="section-number">02</div>
     <h2>Domain Strategy Overview</h2>
+    <p class="section-subtitle">How each brand organizes its web presence across markets and languages.</p>
+
     <table>
       <thead>
-        <tr><th>Brand</th><th>Strategy</th><th>Domains / Locales</th><th>Complexity</th></tr>
+        <tr><th>Brand</th><th>Strategy</th><th>Domains / Locales</th><th style="text-align:right">Complexity</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>KION Group</strong></td><td>Single domain + reports subdomain</td><td>1 domain, 2 languages</td><td><span class="tag low">Low</span></td></tr>
-        <tr><td><strong>Baoli</strong></td><td>Single domain, locale prefixes</td><td>1 domain, 23 locales</td><td><span class="tag low">Low</span></td></tr>
-        <tr><td><strong>Linde MH</strong></td><td>Country-specific domains</td><td>~20–28 domains</td><td><span class="tag med">High</span></td></tr>
-        <tr><td><strong>STILL</strong></td><td>Country-specific domains</td><td>~60+ domains</td><td><span class="tag high">Very High</span></td></tr>
+        <tr><td><strong>KION Group</strong></td><td>Single domain + reports subdomain</td><td>1 domain, 2 languages</td><td class="num"><span class="tag low">Low</span></td></tr>
+        <tr><td><strong>Baoli</strong></td><td>Single domain, locale prefixes</td><td>1 domain, 23 locales</td><td class="num"><span class="tag low">Low</span></td></tr>
+        <tr><td><strong>Linde MH</strong></td><td>Country-specific domains</td><td>~20–28 domains</td><td class="num"><span class="tag med">High</span></td></tr>
+        <tr><td><strong>STILL</strong></td><td>Country-specific domains</td><td>~60+ domains</td><td class="num"><span class="tag high">Very High</span></td></tr>
       </tbody>
     </table>
   </div>
 
+  <hr class="section-rule">
+
   <!-- KION Group -->
-  <div class="brand-section">
-    <h2><span class="dot" style="background:var(--kion)"></span> KION Group</h2>
-    <div class="subtitle">kiongroup.com — Corporate website with investor relations focus</div>
+  <div class="section reveal">
+    <div class="section-number">03</div>
+    <div class="brand-header">
+      <div class="brand-dot" style="background:var(--kion)"></div>
+      <h2>KION Group</h2>
+    </div>
+    <p class="section-subtitle">kiongroup.com — Corporate website with investor relations focus</p>
 
     <table>
       <thead><tr><th>Scope</th><th style="text-align:right">Pages</th></tr></thead>
@@ -356,7 +641,7 @@
         <tr><td>www.kiongroup.com (DE)</td><td class="num">500 – 750</td></tr>
         <tr><td>Chinese Microsite</td><td class="num">1</td></tr>
         <tr><td>reports.kiongroup.com (annual, quarterly, sustainability)</td><td class="num">1,350 – 1,950</td></tr>
-        <tr><td><strong>Total</strong></td><td class="num"><strong>2,500 – 3,600</strong></td></tr>
+        <tr class="total-row"><td><strong>Total</strong></td><td class="num">2,500 – 3,600</td></tr>
       </tbody>
     </table>
 
@@ -373,17 +658,23 @@
       </tbody>
     </table>
 
-    <div class="note">
-      The reports subdomain (reports.kiongroup.com) is significant — the 2024 Annual Report alone has ~95 HTML pages. 11 years of annual reports + 40+ quarterly statements add up to 1,350–1,950 pages. Clarify if these are in scope.
+    <div class="callout">
+      The reports subdomain (reports.kiongroup.com) is significant — the 2024 Annual Report alone has ~95 HTML pages. 11 years of annual reports + 40+ quarterly statements add up to 1,350–1,950 pages. <strong>Clarify if these are in scope.</strong>
     </div>
   </div>
 
-  <!-- STILL -->
-  <div class="brand-section">
-    <h2><span class="dot" style="background:var(--still)"></span> STILL</h2>
-    <div class="subtitle">60+ country domains — The largest brand by far (~80% of total volume)</div>
+  <hr class="section-rule">
 
-    <h3>Sampled Sites (actual sitemap data)</h3>
+  <!-- STILL -->
+  <div class="section reveal">
+    <div class="section-number">04</div>
+    <div class="brand-header">
+      <div class="brand-dot" style="background:var(--still)"></div>
+      <h2>STILL</h2>
+    </div>
+    <p class="section-subtitle">60+ country domains — The largest brand by far, accounting for ~80% of total volume</p>
+
+    <h3>Sampled Sites</h3>
     <table>
       <thead><tr><th>Domain</th><th>Country</th><th style="text-align:right">Pages</th></tr></thead>
       <tbody>
@@ -403,9 +694,9 @@
       </tbody>
     </table>
 
-    <h3>Content Breakdown (still.de reference)</h3>
+    <h3>Content Breakdown (still.de)</h3>
     <table>
-      <thead><tr><th>Category</th><th style="text-align:right">Pages</th><th style="text-align:right">%</th></tr></thead>
+      <thead><tr><th>Category</th><th style="text-align:right">Pages</th><th style="text-align:right">Share</th></tr></thead>
       <tbody>
         <tr><td>Vehicles / Products</td><td class="num">536</td><td class="num">49.5%</td></tr>
         <tr><td>Blog / Content Marketing</td><td class="num">144</td><td class="num">13.3%</td></tr>
@@ -429,19 +720,25 @@
         <tr><td>Tier 4 — Smaller / emerging</td><td>~18</td><td class="num">~350</td><td class="num">~6,300</td></tr>
         <tr><td>Tier 5 — Minimal presence</td><td>~22</td><td class="num">~225</td><td class="num">~4,950</td></tr>
         <tr><td colspan="3">Multi-language variant adjustment (+15–25%)</td><td class="num">+4,000 – 6,000</td></tr>
-        <tr><td colspan="3"><strong>Total</strong></td><td class="num"><strong>30,000 – 38,000</strong></td></tr>
+        <tr class="total-row"><td colspan="3"><strong>Total</strong></td><td class="num">30,000 – 38,000</td></tr>
       </tbody>
     </table>
 
-    <div class="note">
+    <div class="callout">
       Some domains serve multiple languages (e.g., still.de has /de-DE/ and /en-DE/, still.ch has German + French). Each country domain is a standalone website sharing the same CMS template but with independently managed content.
     </div>
   </div>
 
+  <hr class="section-rule">
+
   <!-- Baoli -->
-  <div class="brand-section">
-    <h2><span class="dot" style="background:var(--baoli)"></span> Baoli</h2>
-    <div class="subtitle">baoli-emea.com — Compact product site, 23 locale versions on a single domain</div>
+  <div class="section reveal">
+    <div class="section-number">05</div>
+    <div class="brand-header">
+      <div class="brand-dot" style="background:var(--baoli)"></div>
+      <h2>Baoli</h2>
+    </div>
+    <p class="section-subtitle">baoli-emea.com — Compact product site, 23 locale versions on a single domain</p>
 
     <h3>Locale Versions (23 total)</h3>
     <div class="domain-grid">
@@ -478,8 +775,8 @@
         <tr><td>Product Categories</td><td class="num">6–7</td></tr>
         <tr><td>Product Detail Pages</td><td class="num">17–22</td></tr>
         <tr><td>Legal / Footer</td><td class="num">4</td></tr>
-        <tr><td>News Articles</td><td class="num">3–46 (varies by locale)</td></tr>
-        <tr><td><strong>Per locale subtotal</strong></td><td class="num"><strong>~43–88</strong></td></tr>
+        <tr><td>News Articles</td><td class="num">3–46 (varies)</td></tr>
+        <tr class="total-row"><td><strong>Per locale subtotal</strong></td><td class="num">~43–88</td></tr>
       </tbody>
     </table>
 
@@ -490,15 +787,21 @@
       </tbody>
     </table>
 
-    <div class="note">
-      No sitemap.xml is published. Built on TYPO3 CMS. The en-EMEA version is the most complete (~88 pages); smaller locales average ~45–50. This is the simplest migration of the four brands.
+    <div class="callout">
+      No sitemap.xml is published. Built on TYPO3 CMS. The en-EMEA version is the most complete (~88 pages); smaller locales average ~45–50. <strong>This is the simplest migration of the four brands.</strong>
     </div>
   </div>
 
+  <hr class="section-rule">
+
   <!-- Linde MH -->
-  <div class="brand-section">
-    <h2><span class="dot" style="background:var(--linde)"></span> Linde Material Handling</h2>
-    <div class="subtitle">linde-mh.com + 20–28 country domains — Extensive product catalog with global reach</div>
+  <div class="section reveal">
+    <div class="section-number">06</div>
+    <div class="brand-header">
+      <div class="brand-dot" style="background:var(--linde)"></div>
+      <h2>Linde Material Handling</h2>
+    </div>
+    <p class="section-subtitle">linde-mh.com + 20–28 country domains — Extensive product catalog with global reach</p>
 
     <h3>Confirmed Active Domains (18 verified)</h3>
     <table>
@@ -538,7 +841,7 @@
         <tr><td>Landing Pages / Campaigns</td><td class="num">10–20</td></tr>
         <tr><td>Careers</td><td class="num">5–15</td></tr>
         <tr><td>Utility / Legal</td><td class="num">10–15</td></tr>
-        <tr><td><strong>Per site subtotal</strong></td><td class="num"><strong>145–415</strong></td></tr>
+        <tr class="total-row"><td><strong>Per site subtotal</strong></td><td class="num">145–415</td></tr>
       </tbody>
     </table>
 
@@ -551,27 +854,49 @@
         <tr><td>Asia-Pacific (AU, SG, HK, CN, TH, IN)</td><td class="num">6</td><td class="num">140</td><td class="num">480–1,200</td></tr>
         <tr><td>North America (linde-mh.us)</td><td class="num">1</td><td class="num">150</td><td class="num">100–200</td></tr>
         <tr><td>Other probable sites</td><td class="num">5–10</td><td class="num">115</td><td class="num">400–1,500</td></tr>
-        <tr><td colspan="3"><strong>Total</strong></td><td class="num"><strong>4,000 – 5,000</strong></td></tr>
+        <tr class="total-row"><td colspan="3"><strong>Total</strong></td><td class="num">4,000 – 5,000</td></tr>
       </tbody>
     </table>
 
-    <div class="note">
+    <div class="callout">
       France operates under a separate brand (Fenwick-Linde). No public sitemaps found on any Linde MH domain. Product pages consolidate multiple model variants into series-level pages, keeping page counts manageable. Job listings redirect to KION Group Workday portal.
     </div>
   </div>
 
+  <hr class="section-rule">
+
   <!-- Takeaways -->
-  <div class="takeaways">
-    <h2>Key Takeaways for Migration Planning</h2>
-    <ul>
-      <li><strong>STILL dominates at ~80% of total volume</strong> due to 60+ separate country domains, each independently managed.</li>
-      <li><strong>Localization is the multiplier</strong> — core unique content per brand is modest, but replication across dozens of markets drives the total up.</li>
-      <li><strong>Not all pages need equal treatment</strong> — product pages, news/press, and structural pages have very different migration complexity.</li>
-      <li><strong>Consider phased migration</strong> — migrate 1 flagship market per brand first, then replicate the template across remaining locales.</li>
-      <li><strong>Reports subdomain</strong> (reports.kiongroup.com) contains 1,350–1,950 HTML pages of financial reports that may or may not be in scope.</li>
-      <li><strong>Each separate country domain</strong> (STILL, Linde MH) is essentially a standalone project to set up in Edge Delivery Services.</li>
-      <li><strong>Baoli is the quickest win</strong> — a single domain with a compact product catalog, ideal as a pilot migration.</li>
-    </ul>
+  <div class="takeaways reveal">
+    <div class="section-number">07</div>
+    <h2 style="font-family:'DM Serif Display',serif; font-size:clamp(1.5rem,3vw,2rem); font-weight:400; margin-bottom:0.4rem;">Key Takeaways</h2>
+    <p class="section-subtitle">Strategic observations for migration planning</p>
+
+    <div class="takeaways-grid">
+      <div class="takeaway-item">
+        <div class="takeaway-label">Primary Insight</div>
+        <div class="takeaway-text"><strong>STILL dominates at ~80% of total volume</strong> due to 60+ separate country domains, each independently managed. This is both the largest effort and the biggest opportunity for template reuse.</div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-label">Volume Driver</div>
+        <div class="takeaway-text"><strong>Localization is the multiplier</strong> — core unique content per brand is modest, but replication across dozens of markets drives the total up.</div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-label">Complexity</div>
+        <div class="takeaway-text"><strong>Not all pages need equal treatment</strong> — product pages, news/press, and structural pages have very different migration complexity.</div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-label">Approach</div>
+        <div class="takeaway-text"><strong>Consider phased migration</strong> — migrate 1 flagship market per brand first, then replicate the template across remaining locales.</div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-label">Scope Risk</div>
+        <div class="takeaway-text"><strong>Reports subdomain</strong> contains 1,350–1,950 HTML pages of financial reports that may or may not be in scope for migration.</div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-label">Quick Win</div>
+        <div class="takeaway-text"><strong>Baoli is the ideal pilot</strong> — a single domain with a compact product catalog, perfect for validating the migration approach.</div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -579,6 +904,41 @@
 <footer>
   Generated February 2026 — Page counts are estimates based on sitemap analysis, web crawling, and content sampling.
 </footer>
+
+<script>
+  // Intersection Observer for reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .stat-row').forEach(el => observer.observe(el));
+
+  // Animate hero immediately
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
+  });
+
+  // Animate bar chart fills on reveal
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.bar-fill').forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.width = bar.dataset.width;
+          }, i * 120);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.bar-chart').forEach(el => barObserver.observe(el));
+</script>
 
 </body>
 </html>
