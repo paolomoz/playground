@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full A/B Style Comparison — 57 Styles</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 24px; }
+    header { text-align: center; margin-bottom: 16px; }
+    h1 { font-size: 2rem; font-weight: 600; margin-bottom: 8px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .subtitle { color: #888; font-size: 0.95rem; }
+
+    .legend {
+      display: flex; gap: 32px; justify-content: center; margin: 24px auto;
+      padding: 16px 24px; background: #151515; border-radius: 12px; max-width: 1000px; flex-wrap: wrap;
+    }
+    .legend .col { flex: 1; min-width: 280px; }
+    .legend h3 { font-size: 0.95rem; margin-bottom: 8px; }
+    .legend ul { list-style: none; font-size: 0.82rem; color: #aaa; }
+    .legend li { margin-bottom: 3px; padding-left: 14px; position: relative; }
+    .legend li::before { content: "·"; position: absolute; left: 4px; color: #555; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; margin-right: 4px; }
+    .tag-a { background: rgba(245,87,108,0.2); color: #f5576c; border: 1px solid #f5576c; }
+    .tag-b { background: rgba(79,172,254,0.2); color: #4facfe; border: 1px solid #4facfe; }
+
+    .controls {
+      display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+      margin: 16px auto; max-width: 1200px;
+    }
+    .filter-btn {
+      padding: 6px 14px; border: 1px solid #333; border-radius: 16px;
+      background: transparent; color: #aaa; cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: #667eea; color: #667eea; }
+    .filter-btn.active { background: #667eea; border-color: #667eea; color: #fff; }
+
+    .action-bar {
+      position: sticky; top: 0; z-index: 100; background: #0a0a0a; padding: 12px 0;
+      display: flex; gap: 12px; justify-content: center; align-items: center;
+      border-bottom: 1px solid #222; margin-bottom: 16px;
+    }
+    .action-bar .stats-inline { color: #888; font-size: 0.85rem; }
+    .action-bar .stats-inline span { font-weight: 600; }
+    .action-bar .stats-inline .sa { color: #f5576c; }
+    .action-bar .stats-inline .sb { color: #4facfe; }
+    .action-bar .stats-inline .sd { color: #ef4444; }
+    .action-bar .stats-inline .su { color: #888; }
+
+    .export-btn {
+      padding: 8px 20px; border: 2px solid #22c55e; border-radius: 8px;
+      background: transparent; color: #22c55e; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
+    }
+    .export-btn:hover { background: #22c55e; color: #fff; }
+    .reset-btn {
+      padding: 8px 16px; border: 1px solid #444; border-radius: 8px;
+      background: transparent; color: #888; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .reset-btn:hover { border-color: #888; color: #ccc; }
+
+    .gallery { max-width: 1600px; margin: 0 auto; }
+
+    .row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #1a1a1a;
+      transition: opacity 0.3s;
+    }
+    .row.discarded { opacity: 0.25; }
+
+    .row-header {
+      grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; margin-bottom: 4px; flex-wrap: wrap;
+    }
+    .row-num { background: #333; color: #888; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    .row-name { font-size: 1.2rem; font-weight: 700; color: #fff; }
+    .row-cat { font-size: 0.75rem; color: #667eea; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .choice-btns { display: flex; gap: 6px; margin-left: auto; }
+    .choice-btn {
+      padding: 5px 14px; border-radius: 14px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; border: 2px solid transparent; background: #222; color: #888;
+    }
+    .choice-btn:hover { color: #ccc; border-color: #555; }
+    .choice-btn.pick-a { border-color: transparent; }
+    .choice-btn.pick-a.selected { background: #f5576c; color: #fff; border-color: #f5576c; }
+    .choice-btn.pick-b { border-color: transparent; }
+    .choice-btn.pick-b.selected { background: #4facfe; color: #fff; border-color: #4facfe; }
+    .choice-btn.pick-discard { border-color: transparent; }
+    .choice-btn.pick-discard.selected { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+    .card {
+      background: #1a1a1a; border-radius: 10px; overflow: hidden;
+      border: 2px solid #222; transition: all 0.3s; cursor: pointer;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .card.a { border-color: rgba(245,87,108,0.25); }
+    .card.b { border-color: rgba(79,172,254,0.25); }
+    .card.chosen.a { border-color: #f5576c; border-width: 3px; box-shadow: 0 0 20px rgba(245,87,108,0.2); }
+    .card.chosen.b { border-color: #4facfe; border-width: 3px; box-shadow: 0 0 20px rgba(79,172,254,0.2); }
+    .card.missing { opacity: 0.4; cursor: default; }
+    .card.missing:hover { transform: none; box-shadow: none; }
+
+    .card-top { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 4px; }
+    .card-method { font-size: 0.8rem; font-weight: 600; }
+    .card-method.ma { color: #f5576c; }
+    .card-method.mb { color: #4facfe; }
+
+    .card-img-wrap { aspect-ratio: 16/10; background: #111; overflow: hidden; }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: contain; background: #111; }
+    .card-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.85rem; }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 40px; }
+    .modal.active { display: flex; }
+    .modal img { max-width: 90vw; max-height: 85vh; border-radius: 8px; }
+    .modal-close { position: fixed; top: 16px; right: 24px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; z-index: 1001; }
+    .modal-title { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 1rem; background: rgba(0,0,0,0.7); padding: 8px 20px; border-radius: 8px; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #22c55e; color: #fff; padding: 12px 24px; border-radius: 8px;
+      font-weight: 600; font-size: 0.9rem; z-index: 2000;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Method A vs Method B — Full Comparison</h1>
+    <p class="subtitle">Select A, B, or Discard for each style, then export your choices</p>
+  </header>
+
+  <div class="legend">
+    <div class="col">
+      <h3><span class="tag tag-a">A</span> Quick Method</h3>
+      <ul>
+        <li>Style definition written directly from knowledge</li>
+        <li>No research, no reference images</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3><span class="tag tag-b">B</span> Formal Skill Process</h3>
+      <ul>
+        <li>5-step process with cross-referencing</li>
+        <li>Richer Anti-Patterns and differentiation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="controls" id="controls"></div>
+
+  <div class="action-bar">
+    <div class="stats-inline">
+      <span class="sa" id="count-a">0</span> A |
+      <span class="sb" id="count-b">0</span> B |
+      <span class="sd" id="count-d">0</span> Discard |
+      <span class="su" id="count-u">57</span> Undecided
+    </div>
+    <button class="export-btn" onclick="exportChoices()">Copy Results</button>
+    <button class="reset-btn" onclick="resetChoices()">Reset</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="modal" id="modal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <img id="modal-img" src="" alt="">
+    <div class="modal-title" id="modal-title"></div>
+  </div>
+
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <script>
+    const styles = [
+      { id:'aged-academia', name:'Aged Academia', cat:'Original', hasA:true, hasB:true },
+      { id:'airline-travel-poster', name:'Airline Travel Poster', cat:'Posters', hasA:true, hasB:true },
+      { id:'art-nouveau', name:'Art Nouveau', cat:'European', hasA:true, hasB:true },
+      { id:'art-nouveau-mucha', name:'Art Nouveau (Mucha)', cat:'European', hasA:true, hasB:true },
+      { id:'atomic-age', name:'Atomic Age', cat:'Mid-Century', hasA:true, hasB:true },
+      { id:'axonometric', name:'Axonometric', cat:'Technical', hasA:true, hasB:true },
+      { id:'bauhaus', name:'Bauhaus', cat:'Modernist', hasA:true, hasB:true },
+      { id:'bold-graphic', name:'Bold Graphic', cat:'Original', hasA:true, hasB:true },
+      { id:'botanical-illustration', name:'Botanical Illustration', cat:'Scientific', hasA:true, hasB:false },
+      { id:'chalkboard', name:'Chalkboard', cat:'Original', hasA:false, hasB:false },
+      { id:'claymation', name:'Claymation', cat:'Original', hasA:false, hasB:true },
+      { id:'corporate-memphis', name:'Corporate Memphis', cat:'Original', hasA:false, hasB:true },
+      { id:'craft-handmade', name:'Craft Handmade', cat:'Original', hasA:false, hasB:true },
+      { id:'cubism', name:'Cubism', cat:'European', hasA:false, hasB:false },
+      { id:'daniel-clowes', name:'Daniel Clowes', cat:'Comics', hasA:false, hasB:false },
+      { id:'dr-seuss', name:'Dr. Seuss', cat:"Children's", hasA:false, hasB:true },
+      { id:'fantasy-map', name:'Fantasy Map', cat:'Maps', hasA:true, hasB:true },
+      { id:'futurism', name:'Futurism', cat:'European', hasA:true, hasB:true },
+      { id:'golden-age-comics', name:'Golden Age Comics', cat:'Comics', hasA:true, hasB:false },
+      { id:'googie', name:'Googie', cat:'Mid-Century', hasA:true, hasB:false },
+      { id:'ikea-manual', name:'IKEA Manual', cat:'Original', hasA:true, hasB:true },
+      { id:'isometric-technical', name:'Isometric Technical', cat:'Technical', hasA:true, hasB:true },
+      { id:'kandinsky', name:'Kandinsky', cat:'Modernist', hasA:true, hasB:false },
+      { id:'kawaii', name:'Kawaii', cat:'Original', hasA:true, hasB:false },
+      { id:'keith-haring', name:'Keith Haring', cat:'Pop/Street', hasA:true, hasB:false },
+      { id:'knolling', name:'Knolling', cat:'Original', hasA:true, hasB:true },
+      { id:'matsumoto', name:'Taiyo Matsumoto', cat:'Comics', hasA:true, hasB:true },
+      { id:'memphis', name:'Memphis', cat:'Pop/Street', hasA:false, hasB:true },
+      { id:'origami', name:'Origami', cat:'Original', hasA:false, hasB:true },
+      { id:'osamu-tezuka', name:'Osamu Tezuka', cat:'Comics', hasA:false, hasB:true },
+      { id:'patent-drawing', name:'Patent Drawing', cat:'Scientific', hasA:false, hasB:true },
+      { id:'paul-rand', name:'Paul Rand', cat:'Mid-Century', hasA:false, hasB:true },
+      { id:'pixel-art', name:'Pixel Art', cat:'Original', hasA:true, hasB:true },
+      { id:'pop-art-lichtenstein', name:'Pop Art (Lichtenstein)', cat:'Pop/Street', hasA:true, hasB:true },
+      { id:'renaissance-diagram', name:'Renaissance Diagram', cat:'European', hasA:true, hasB:true },
+      { id:'richard-scarry', name:'Richard Scarry', cat:"Children's", hasA:true, hasB:true },
+      { id:'rinpa', name:'Rinpa', cat:'Asian', hasA:true, hasB:true },
+      { id:'saul-bass', name:'Saul Bass', cat:'Mid-Century', hasA:true, hasB:true },
+      { id:'shan-shui', name:'Shan-Shui', cat:'Asian', hasA:true, hasB:true },
+      { id:'storybook-watercolor', name:'Storybook Watercolor', cat:'Original', hasA:true, hasB:true },
+      { id:'studio-ghibli', name:'Studio Ghibli', cat:'Comics', hasA:true, hasB:true },
+      { id:'subway-map', name:'Subway Map', cat:'Original', hasA:false, hasB:true },
+      { id:'sumi-e', name:'Sumi-e', cat:'Asian', hasA:false, hasB:true },
+      { id:'technical-schematic', name:'Technical Schematic', cat:'Technical', hasA:false, hasB:false },
+      { id:'treasure-map', name:'Treasure Map', cat:'Maps', hasA:false, hasB:false },
+      { id:'ukiyo-e', name:'Ukiyo-e', cat:'Asian', hasA:false, hasB:false },
+      { id:'ligne-claire', name:'Ligne Claire', cat:'Test', hasA:true, hasB:true },
+      { id:'superflat', name:'Superflat', cat:'Test', hasA:true, hasB:true },
+      { id:'de-stijl', name:'De Stijl', cat:'Test', hasA:true, hasB:true },
+      { id:'jack-kirby', name:'Jack Kirby', cat:'Test', hasA:true, hasB:true },
+      { id:'isotype', name:'ISOTYPE', cat:'Test', hasA:true, hasB:true },
+      { id:'tibetan-thangka', name:'Tibetan Thangka', cat:'Test', hasA:true, hasB:true },
+      { id:'dia-de-muertos', name:'Dia de Muertos', cat:'Test', hasA:true, hasB:true },
+      { id:'synthwave', name:'Synthwave', cat:'Test', hasA:true, hasB:true },
+      { id:'charley-harper', name:'Charley Harper', cat:'Test', hasA:true, hasB:true },
+      { id:'constructivism', name:'Constructivism', cat:'Test', hasA:true, hasB:true },
+      { id:'moebius', name:'Moebius', cat:'Test', hasA:true, hasB:true },
+    ];
+
+    let choices = JSON.parse(localStorage.getItem('abChoices') || '{}');
+    let filter = 'all';
+    const cats = [...new Set(styles.map(s => s.cat))];
+
+    function init() {
+      renderControls();
+      renderGallery();
+      updateCounts();
+    }
+
+    function renderControls() {
+      const c = document.getElementById('controls');
+      const btns = [
+        { f:'all', label:'All' },
+        { f:'both', label:'Both A+B' },
+        { f:'undecided', label:'Undecided' },
+        { f:'chosen-a', label:'Chose A' },
+        { f:'chosen-b', label:'Chose B' },
+        { f:'discarded', label:'Discarded' },
+        ...cats.map(cat => ({ f:'cat:'+cat, label:cat }))
+      ];
+      c.innerHTML = btns.map(b =>
+        `<button class="filter-btn ${b.f==='all'?'active':''}" data-f="${b.f}">${b.label}</button>`
+      ).join('');
+      c.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          c.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filter = btn.dataset.f;
+          renderGallery();
+        });
+      });
+    }
+
+    function filterStyles() {
+      return styles.filter(s => {
+        if (filter === 'all') return true;
+        if (filter === 'both') return s.hasA && s.hasB;
+        if (filter === 'undecided') return !choices[s.id];
+        if (filter === 'chosen-a') return choices[s.id] === 'a';
+        if (filter === 'chosen-b') return choices[s.id] === 'b';
+        if (filter === 'discarded') return choices[s.id] === 'discard';
+        if (filter.startsWith('cat:')) return s.cat === filter.slice(4);
+        return true;
+      });
+    }
+
+    function choose(id, choice, evt) {
+      if (evt) evt.stopPropagation();
+      if (choices[id] === choice) {
+        delete choices[id];
+      } else {
+        choices[id] = choice;
+      }
+      localStorage.setItem('abChoices', JSON.stringify(choices));
+      renderGallery();
+      updateCounts();
+    }
+
+    function updateCounts() {
+      const vals = Object.values(choices);
+      document.getElementById('count-a').textContent = vals.filter(v => v === 'a').length;
+      document.getElementById('count-b').textContent = vals.filter(v => v === 'b').length;
+      document.getElementById('count-d').textContent = vals.filter(v => v === 'discard').length;
+      document.getElementById('count-u').textContent = styles.length - vals.length;
+    }
+
+    function renderGallery() {
+      const g = document.getElementById('gallery');
+      const filtered = filterStyles();
+
+      g.innerHTML = filtered.map((s, i) => {
+        const ch = choices[s.id] || '';
+        const isDiscarded = ch === 'discard';
+        return `
+        <div class="row ${isDiscarded ? 'discarded' : ''}" data-id="${s.id}">
+          <div class="row-header">
+            <div class="row-num">${i+1}</div>
+            <div class="row-name">${s.name}</div>
+            <div class="row-cat">${s.cat}</div>
+            <div class="choice-btns">
+              <button class="choice-btn pick-a ${ch==='a'?'selected':''}" onclick="choose('${s.id}','a',event)">A</button>
+              <button class="choice-btn pick-b ${ch==='b'?'selected':''}" onclick="choose('${s.id}','b',event)">B</button>
+              <button class="choice-btn pick-discard ${ch==='discard'?'selected':''}" onclick="choose('${s.id}','discard',event)">Discard</button>
+            </div>
+          </div>
+          <div class="card a ${s.hasA?'':'missing'} ${ch==='a'?'chosen':''}" ${s.hasA?`onclick="openModal('${s.id}-test-a.png','${s.name} — Method A')"`:''}>
+            <div class="card-top">
+              <span class="card-method ma">Method A — Quick</span>
+            </div>
+            <div class="card-img-wrap">
+              ${s.hasA
+                ? `<img src="${s.id}-test-a.png" alt="${s.name} A" loading="lazy">`
+                : `<div class="card-placeholder">API limit — not generated</div>`}
+            </div>
+          </div>
+          <div class="card b ${s.hasB?'':'missing'} ${ch==='b'?'chosen':''}" ${s.hasB?`onclick="openModal('${s.id}-test-b.png','${s.name} — Method B')"`:''}>
+            <div class="card-top">
+              <span class="card-method mb">Method B — Formal Skill</span>
+            </div>
+            <div class="card-img-wrap">
+              ${s.hasB
+                ? `<img src="${s.id}-test-b.png" alt="${s.name} B" loading="lazy">`
+                : `<div class="card-placeholder">API limit — not generated</div>`}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function exportChoices() {
+      const useA = styles.filter(s => choices[s.id] === 'a').map(s => s.id);
+      const useB = styles.filter(s => choices[s.id] === 'b').map(s => s.id);
+      const discard = styles.filter(s => choices[s.id] === 'discard').map(s => s.id);
+      const undecided = styles.filter(s => !choices[s.id]).map(s => s.id);
+
+      const text = `# Style A/B Selection Results
+
+## Use Method A definition (${useA.length})
+${useA.join(', ') || 'None'}
+
+## Use Method B definition (${useB.length})
+${useB.join(', ') || 'None'}
+
+## Discard (${discard.length})
+${discard.join(', ') || 'None'}
+
+## Undecided (${undecided.length})
+${undecided.join(', ') || 'None'}
+`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    function resetChoices() {
+      if (confirm('Reset all selections?')) {
+        choices = {};
+        localStorage.removeItem('abChoices');
+        renderGallery();
+        updateCounts();
+      }
+    }
+
+    function openModal(src, title) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal').classList.add('active');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('modal').classList.contains('active')) {
+        if (e.key === 'Escape') closeModal();
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

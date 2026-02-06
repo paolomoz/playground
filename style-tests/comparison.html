@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Method A vs Method B — Style Comparison</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle { color: #888; font-size: 0.95rem; margin-bottom: 8px; }
+
+    .method-legend {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      margin-bottom: 32px;
+      padding: 16px;
+      background: #151515;
+      border-radius: 12px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .method-legend .method {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .method-legend h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .method-legend .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .tag-a { background: rgba(245, 87, 108, 0.2); color: #f5576c; border: 1px solid #f5576c; }
+    .tag-b { background: rgba(79, 172, 254, 0.2); color: #4facfe; border: 1px solid #4facfe; }
+
+    .method-legend ul {
+      list-style: none;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .method-legend li {
+      margin-bottom: 4px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .method-legend li::before {
+      content: "·";
+      position: absolute;
+      left: 4px;
+      color: #555;
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 1600px;
+      margin: 0 auto 40px;
+      align-items: start;
+    }
+
+    .style-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .style-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .style-number {
+      background: #333;
+      color: #888;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .verdict-badge {
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .verdict-a { background: rgba(245, 87, 108, 0.2); color: #f5576c; }
+    .verdict-b { background: rgba(79, 172, 254, 0.2); color: #4facfe; }
+    .verdict-tie { background: rgba(255, 200, 50, 0.2); color: #ffc832; }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #222;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .card.method-a { border-color: rgba(245, 87, 108, 0.3); }
+    .card.method-b { border-color: rgba(79, 172, 254, 0.3); }
+
+    .card.winner { border-width: 3px; }
+    .card.winner.method-a { border-color: #f5576c; box-shadow: 0 0 20px rgba(245, 87, 108, 0.15); }
+    .card.winner.method-b { border-color: #4facfe; box-shadow: 0 0 20px rgba(79, 172, 254, 0.15); }
+
+    .card-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+    }
+
+    .card-method {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .card-method.a { color: #f5576c; }
+    .card-method.b { color: #4facfe; }
+
+    .winner-star {
+      font-size: 1.2rem;
+    }
+
+    .card-image-container {
+      aspect-ratio: 16/10;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #111;
+    }
+
+    .card-notes {
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    .divider {
+      max-width: 1600px;
+      margin: 0 auto 40px;
+      border: none;
+      border-top: 1px solid #222;
+    }
+
+    .assessment {
+      max-width: 900px;
+      margin: 48px auto;
+      padding: 32px;
+      background: #151515;
+      border-radius: 16px;
+      border: 1px solid #222;
+    }
+
+    .assessment h2 {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .assessment h3 {
+      font-size: 1.05rem;
+      margin: 20px 0 8px;
+      color: #ccc;
+    }
+
+    .assessment p, .assessment li {
+      font-size: 0.9rem;
+      color: #aaa;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .assessment ul {
+      padding-left: 20px;
+    }
+
+    .assessment table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.85rem;
+    }
+
+    .assessment th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 2px solid #333;
+      color: #ccc;
+    }
+
+    .assessment td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #222;
+      color: #aaa;
+    }
+
+    .score-table td:nth-child(2), .score-table td:nth-child(3) {
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .modal-title {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 1.1rem;
+      background: rgba(0,0,0,0.6);
+      padding: 8px 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Method A vs Method B</h1>
+    <p class="subtitle">Comparing two approaches to style definition creation</p>
+  </header>
+
+  <div class="method-legend">
+    <div class="method">
+      <h3><span class="tag tag-a">A</span> Quick Method</h3>
+      <ul>
+        <li>Written directly from knowledge</li>
+        <li>No research, no reference images</li>
+        <li>~100s per style definition</li>
+        <li>Uses: Claude knowledge only</li>
+        <li>Services: baoyu-image-gen (Google Gemini API)</li>
+      </ul>
+    </div>
+    <div class="method">
+      <h3><span class="tag tag-b">B</span> Formal Skill Process</h3>
+      <ul>
+        <li>Follows SKILL.md 5-step template</li>
+        <li>Reads existing styles for calibration</li>
+        <li>Cross-references to differentiate</li>
+        <li>Downloads Unsplash reference images</li>
+        <li>Services: Unsplash API + baoyu-image-gen (Google Gemini API)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="gallery"></div>
+
+  <div class="assessment">
+    <h2>Overall Assessment</h2>
+
+    <h3>Scoring Summary</h3>
+    <table class="score-table">
+      <thead>
+        <tr><th>Style</th><th><span class="tag tag-a">A</span></th><th><span class="tag tag-b">B</span></th><th>Winner</th><th>Notes</th></tr>
+      </thead>
+      <tbody id="score-table-body"></tbody>
+    </table>
+
+    <h3>What Method A Does Better</h3>
+    <ul>
+      <li><strong>Speed</strong>: ~100s vs ~400s per style definition (4x faster)</li>
+      <li><strong>Vivid imagination</strong>: Unconstrained by template, often produces more evocative prose</li>
+      <li><strong>Image quality parity</strong>: Since both use the same image generation API (Google Gemini via baoyu-image-gen), the generated images are comparable quality</li>
+      <li><strong>Self-contained</strong>: No external dependencies (Unsplash searches often return irrelevant results for art styles)</li>
+    </ul>
+
+    <h3>What Method B Does Better</h3>
+    <ul>
+      <li><strong>Differentiation</strong>: Anti-Patterns explicitly name adjacent existing styles, preventing confusion in large catalogs</li>
+      <li><strong>Consistency</strong>: Reading existing styles ensures format alignment across the collection</li>
+      <li><strong>Pipeline-ready</strong>: Validates H1 headings, section names, loader compatibility</li>
+      <li><strong>Reference images</strong>: When available, provide palette/motif guidance (though often add noise for illustration styles)</li>
+    </ul>
+
+    <h3>Services Used</h3>
+    <table>
+      <thead>
+        <tr><th>Service</th><th>Method A</th><th>Method B</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Claude (LLM)</td><td>Yes</td><td>Yes</td><td>Write style definitions from knowledge</td></tr>
+        <tr><td>baoyu-image-gen (Google Gemini API)</td><td>Yes</td><td>Yes</td><td>Generate test infographic images</td></tr>
+        <tr><td>Unsplash API</td><td>No</td><td>Yes</td><td>Download reference images for palette/motif guidance</td></tr>
+        <tr><td>Existing style files (local)</td><td>No</td><td>Yes</td><td>Format calibration and differentiation</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Recommendation</h3>
+    <p>
+      <strong>Use Method A for rapid prototyping</strong> — when exploring new styles or building a first draft. The image quality is equivalent and turnaround is 4x faster.
+    </p>
+    <p>
+      <strong>Use Method B for production deployment</strong> — when adding styles to a shared catalog where differentiation from existing styles matters. The cross-referencing and validation steps prevent style confusion at scale.
+    </p>
+    <p>
+      <strong>Best approach: Method A first, then Method B polish</strong> — Write the style quickly from knowledge (Method A), test it, iterate on the visual output, then run the formal process to add differentiation, validation, and cross-referencing before committing to production.
+    </p>
+  </div>
+
+  <div class="modal" id="modal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <img id="modal-image" src="" alt="">
+    <div class="modal-title" id="modal-title"></div>
+  </div>
+
+  <script>
+    const styles = [
+      {
+        id: 'ligne-claire', name: 'Ligne Claire', number: 1,
+        winner: 'a',
+        noteA: 'Rich Tintin-like album page with full background environments, warm palette, architectural detail in each panel.',
+        noteB: 'More diagrammatic with speech bubbles, flow arrows, cutaway cross-section. More "infographic," less "comic."',
+      },
+      {
+        id: 'superflat', name: 'Superflat (Murakami)', number: 2,
+        winner: 'tie',
+        noteA: 'Dense smiling flowers filling every gap, candy-colored panels, cartoon characters, high saturation.',
+        noteB: 'Similar quality. Slightly more pastel/kawaii-leaning. Anti-Patterns section better differentiates from kawaii style.',
+      },
+      {
+        id: 'de-stijl', name: 'De Stijl (Mondrian)', number: 3,
+        winner: 'tie',
+        noteA: 'Strict Mondrian grid: only red, blue, yellow, white, black. Orthogonal, asymmetric. Clean.',
+        noteB: 'Equally faithful to Mondrian rules. Better differentiation from existing bauhaus style in the definition.',
+      },
+      {
+        id: 'jack-kirby', name: 'Jack Kirby', number: 4,
+        winner: 'a',
+        noteA: 'Massive foreshortened fist, KRUNCH! effects, Kirby Krackle dots, cosmic backgrounds, explosive energy.',
+        noteB: 'Similar cosmic/starburst elements, comic lettering. Slightly less dynamic composition.',
+      },
+      {
+        id: 'isotype', name: 'ISOTYPE (Neurath)', number: 5,
+        winner: 'tie',
+        noteA: 'Clean horizontal rows of repeated pictograms, flat silhouettes, white background, geometric labels.',
+        noteB: 'Warm ivory background, solid red and black pictograms, same strong row alignment. Slightly warmer palette.',
+      },
+      {
+        id: 'tibetan-thangka', name: 'Tibetan Thangka', number: 6,
+        winner: 'b',
+        noteA: 'Gold filigree on deep blue, flame aureole frames, lotus elements. Good sacred geometry feel.',
+        noteB: 'Figures on lotus thrones in meditation posture, concentric aureoles, richer mineral pigments. Reference images guided palette.',
+      },
+      {
+        id: 'dia-de-muertos', name: 'Dia de los Muertos', number: 7,
+        winner: 'tie',
+        noteA: 'Decorated calaveras, marigold garlands, papel picado banners, joyful skeleton figures.',
+        noteB: 'Similar quality with decorated skulls, papel picado, vibrant hot colors. Reference images available for this style.',
+      },
+      {
+        id: 'synthwave', name: 'Synthwave', number: 8,
+        winner: 'a',
+        noteA: 'Neon-bordered panels, perspective grid floor, chrome text, sunset horizon glow, scanlines. Strong atmosphere.',
+        noteB: 'Same core vocabulary. Gradient sun with horizontal slices. Both nail the retro-futuristic feel well.',
+      },
+      {
+        id: 'charley-harper', name: 'Charley Harper', number: 9,
+        winner: 'b',
+        noteA: 'Flat geometric shapes on cream, bird perched near cup, bold primary colors, no outlines. Good.',
+        noteB: 'Animal characters performing each step (cardinal cracking beans, blue jay pouring water). Clever nature metaphors, more Harper.',
+      },
+      {
+        id: 'constructivism', name: 'Constructivism', number: 10,
+        winner: 'tie',
+        noteA: 'Red/black/cream, diagonal composition, stencil numerals, worker silhouettes, sunburst lines. Even got Cyrillic.',
+        noteB: 'Red wedge triangles, industrial gears, bold Cyrillic typography. Both nailed the revolutionary poster feel.',
+      },
+      {
+        id: 'moebius', name: 'Moebius (Giraud)', number: 11,
+        winner: 'a',
+        noteA: 'Fine crosshatching, vast alien desert, lone robed figure, luminous watercolor washes, circular vignettes in panorama.',
+        noteB: 'Biomechanical coffee equipment, alien flora, cosmic scale. Good but slightly less poetic composition.',
+      },
+    ];
+
+    function renderGallery() {
+      const gallery = document.getElementById('gallery');
+      const scoreBody = document.getElementById('score-table-body');
+
+      styles.forEach(style => {
+        // Header
+        const header = document.createElement('div');
+        header.className = 'comparison-row';
+        header.innerHTML = `
+          <div class="style-header">
+            <div class="style-number">${style.number}</div>
+            <div class="style-name">${style.name}</div>
+            <div class="verdict-badge ${style.winner === 'a' ? 'verdict-a' : style.winner === 'b' ? 'verdict-b' : 'verdict-tie'}">
+              ${style.winner === 'a' ? 'Method A wins' : style.winner === 'b' ? 'Method B wins' : 'Tie'}
+            </div>
+          </div>
+          <div class="card method-a ${style.winner === 'a' ? 'winner' : ''}" onclick="openModal('${style.id}-test-a.png', '${style.name} — Method A (Quick)')">
+            <div class="card-label">
+              <span class="card-method a">Method A — Quick</span>
+              ${style.winner === 'a' ? '<span class="winner-star">&#9733;</span>' : ''}
+            </div>
+            <div class="card-image-container">
+              <img class="card-image" src="${style.id}-test-a.png" alt="${style.name} Method A" loading="lazy">
+            </div>
+            <div class="card-notes">${style.noteA}</div>
+          </div>
+          <div class="card method-b ${style.winner === 'b' ? 'winner' : ''}" onclick="openModal('${style.id}-test-b.png', '${style.name} — Method B (Skill)')">
+            <div class="card-label">
+              <span class="card-method b">Method B — Formal Skill</span>
+              ${style.winner === 'b' ? '<span class="winner-star">&#9733;</span>' : ''}
+            </div>
+            <div class="card-image-container">
+              <img class="card-image" src="${style.id}-test-b.png" alt="${style.name} Method B" loading="lazy">
+            </div>
+            <div class="card-notes">${style.noteB}</div>
+          </div>
+        `;
+        gallery.appendChild(header);
+
+        const divider = document.createElement('hr');
+        divider.className = 'divider';
+        gallery.appendChild(divider);
+
+        // Score row
+        const winLabel = style.winner === 'a'
+          ? '<span style="color:#f5576c">A</span>'
+          : style.winner === 'b'
+          ? '<span style="color:#4facfe">B</span>'
+          : '<span style="color:#ffc832">Tie</span>';
+        const shortNote = style.winner === 'a' ? style.noteA.split('.')[0]
+          : style.winner === 'b' ? style.noteB.split('.')[0]
+          : 'Comparable quality';
+        scoreBody.innerHTML += `<tr>
+          <td>${style.name}</td>
+          <td>${style.winner === 'a' ? '&#9733;' : ''}</td>
+          <td>${style.winner === 'b' ? '&#9733;' : ''}</td>
+          <td>${winLabel}</td>
+          <td style="font-size:0.8rem">${shortNote}</td>
+        </tr>`;
+      });
+
+      // Summary row
+      const aWins = styles.filter(s => s.winner === 'a').length;
+      const bWins = styles.filter(s => s.winner === 'b').length;
+      const ties = styles.filter(s => s.winner === 'tie').length;
+      scoreBody.innerHTML += `<tr style="border-top:2px solid #444; font-weight:600">
+        <td>Total</td>
+        <td style="color:#f5576c">${aWins} wins</td>
+        <td style="color:#4facfe">${bWins} wins</td>
+        <td>${ties} ties</td>
+        <td></td>
+      </tr>`;
+    }
+
+    function openModal(src, title) {
+      document.getElementById('modal-image').src = src;
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    renderGallery();
+  </script>
+</body>
+</html>

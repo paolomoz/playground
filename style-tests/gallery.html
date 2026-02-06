@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Style Validation Gallery</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #151515;
+      border-radius: 12px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid #333;
+      border-radius: 20px;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .filter-btn.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+
+    .stats {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .stats span {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .rating-controls {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .rating-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .rating-btn.approve {
+      background: #22c55e;
+      color: white;
+    }
+
+    .rating-btn.reject {
+      background: #ef4444;
+      color: white;
+    }
+
+    .rating-btn.reset {
+      background: #333;
+      color: #aaa;
+    }
+
+    .rating-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .export-btn {
+      padding: 10px 20px;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      background: transparent;
+      color: #667eea;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .export-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+    }
+
+    .card.approved {
+      border-color: #22c55e;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+    }
+
+    .card.rejected {
+      border-color: #ef4444;
+      opacity: 0.6;
+    }
+
+    .card.selected {
+      border-color: #667eea;
+    }
+
+    .card-image-container {
+      position: relative;
+      aspect-ratio: 1;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .card:hover .card-image {
+      transform: scale(1.05);
+    }
+
+    .card-status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card.approved .card-status,
+    .card.rejected .card-status {
+      opacity: 1;
+    }
+
+    .card.approved .card-status {
+      background: #22c55e;
+    }
+
+    .card.rejected .card-status {
+      background: #ef4444;
+    }
+
+    .card-info {
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .card-category {
+      font-size: 0.8rem;
+      color: #667eea;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .card-action {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .card-action.approve-btn {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .card-action.approve-btn:hover {
+      background: #22c55e;
+      color: white;
+    }
+
+    .card-action.reject-btn {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .card-action.reject-btn:hover {
+      background: #ef4444;
+      color: white;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 8px;
+    }
+
+    .modal-title {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      padding: 20px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .modal-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-nav.prev {
+      left: -60px;
+    }
+
+    .modal-nav.next {
+      right: -60px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+
+      .modal-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Style Validation Gallery</h1>
+    <p class="subtitle">Review and approve/reject each style's test infographic</p>
+  </header>
+
+  <div class="controls" id="filters"></div>
+
+  <div class="stats">
+    Showing <span id="visible-count">0</span> of <span id="total-count">0</span> styles |
+    <span id="approved-count">0</span> approved |
+    <span id="rejected-count">0</span> rejected
+  </div>
+
+  <div class="rating-controls">
+    <button class="export-btn" onclick="exportResults()">Export Results</button>
+    <button class="rating-btn reset" onclick="resetAll()">Reset All</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <button class="modal-nav prev" onclick="navigateModal(-1)">&larr;</button>
+      <button class="modal-nav next" onclick="navigateModal(1)">&rarr;</button>
+      <img class="modal-image" id="modal-image" src="" alt="">
+      <div class="modal-title" id="modal-title"></div>
+    </div>
+  </div>
+
+  <script>
+    const styles = [
+      // Asian Art
+      { id: 'rinpa', name: 'Rinpa', category: 'Asian Art' },
+      { id: 'shan-shui', name: 'Shan-Shui', category: 'Asian Art' },
+      { id: 'sumi-e', name: 'Sumi-e', category: 'Asian Art' },
+      { id: 'ukiyo-e', name: 'Ukiyo-e', category: 'Asian Art' },
+
+      // European Historical
+      { id: 'renaissance-diagram', name: 'Renaissance Diagram', category: 'European Historical' },
+      { id: 'art-nouveau', name: 'Art Nouveau', category: 'European Historical' },
+      { id: 'art-nouveau-mucha', name: 'Art Nouveau (Mucha)', category: 'European Historical' },
+      { id: 'cubism', name: 'Cubism', category: 'European Historical' },
+      { id: 'futurism', name: 'Futurism', category: 'European Historical' },
+
+      // Modernist Masters
+      { id: 'klee', name: 'Paul Klee', category: 'Modernist Masters' },
+      { id: 'kandinsky', name: 'Kandinsky', category: 'Modernist Masters' },
+      { id: 'bauhaus', name: 'Bauhaus', category: 'Modernist Masters' },
+
+      // Mid-Century Design
+      { id: 'saul-bass', name: 'Saul Bass', category: 'Mid-Century Design' },
+      { id: 'paul-rand', name: 'Paul Rand', category: 'Mid-Century Design' },
+      { id: 'atomic-age', name: 'Atomic Age', category: 'Mid-Century Design' },
+      { id: 'googie', name: 'Googie', category: 'Mid-Century Design' },
+
+      // Pop/Street Art
+      { id: 'pop-art-lichtenstein', name: 'Pop Art (Lichtenstein)', category: 'Pop/Street Art' },
+      { id: 'keith-haring', name: 'Keith Haring', category: 'Pop/Street Art' },
+      { id: 'psychedelic-60s', name: 'Psychedelic 60s', category: 'Pop/Street Art' },
+      { id: 'memphis', name: 'Memphis', category: 'Pop/Street Art' },
+
+      // Comics/Manga
+      { id: 'daniel-clowes', name: 'Daniel Clowes', category: 'Comics/Manga' },
+      { id: 'golden-age-comics', name: 'Golden Age Comics', category: 'Comics/Manga' },
+      { id: 'osamu-tezuka', name: 'Osamu Tezuka', category: 'Comics/Manga' },
+      { id: 'studio-ghibli', name: 'Studio Ghibli', category: 'Comics/Manga' },
+      { id: 'matsumoto', name: 'Taiyo Matsumoto', category: 'Comics/Manga' },
+
+      // Scientific/Technical
+      { id: 'botanical-illustration', name: 'Botanical Illustration', category: 'Scientific/Technical' },
+      { id: 'patent-drawing', name: 'Patent Drawing', category: 'Scientific/Technical' },
+      { id: 'isometric-technical', name: 'Isometric Technical', category: 'Scientific/Technical' },
+      { id: 'architectural-section', name: 'Architectural Section', category: 'Scientific/Technical' },
+      { id: 'axonometric', name: 'Axonometric', category: 'Scientific/Technical' },
+
+      // Maps
+      { id: 'treasure-map', name: 'Treasure Map', category: 'Maps' },
+      { id: 'fantasy-map', name: 'Fantasy Map', category: 'Maps' },
+      { id: 'board-game-map', name: 'Board Game Map', category: 'Maps' },
+
+      // Children's
+      { id: 'richard-scarry', name: 'Richard Scarry', category: "Children's" },
+      { id: 'dr-seuss', name: 'Dr. Seuss', category: "Children's" },
+
+      // Posters
+      { id: 'airline-travel-poster', name: 'Airline Travel Poster', category: 'Posters' },
+      { id: 'ski-poster', name: 'Ski Poster', category: 'Posters' },
+      { id: 'art-deco', name: 'Art Deco', category: 'Posters' },
+
+      // Digital
+      { id: 'glassmorphism', name: 'Glassmorphism', category: 'Digital' },
+      { id: 'pastel', name: 'Pastel', category: 'Digital' },
+      { id: 'adobe', name: 'Adobe', category: 'Digital' },
+    ];
+
+    let ratings = JSON.parse(localStorage.getItem('styleRatings') || '{}');
+    let currentFilter = 'all';
+    let currentModalIndex = -1;
+
+    const categories = [...new Set(styles.map(s => s.category))];
+
+    function init() {
+      renderFilters();
+      renderGallery();
+      updateStats();
+    }
+
+    function renderFilters() {
+      const container = document.getElementById('filters');
+      container.innerHTML = `
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="approved">Approved</button>
+        <button class="filter-btn" data-filter="rejected">Rejected</button>
+        <button class="filter-btn" data-filter="unrated">Unrated</button>
+        ${categories.map(cat => `<button class="filter-btn" data-filter="${cat}">${cat}</button>`).join('')}
+      `;
+
+      container.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderGallery();
+          updateStats();
+        });
+      });
+    }
+
+    function renderGallery() {
+      const container = document.getElementById('gallery');
+      const filtered = styles.filter(style => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'approved') return ratings[style.id] === 'approved';
+        if (currentFilter === 'rejected') return ratings[style.id] === 'rejected';
+        if (currentFilter === 'unrated') return !ratings[style.id];
+        return style.category === currentFilter;
+      });
+
+      container.innerHTML = filtered.map((style, idx) => `
+        <div class="card ${ratings[style.id] || ''}" data-id="${style.id}" data-index="${styles.indexOf(style)}">
+          <div class="card-image-container" onclick="openModal(${styles.indexOf(style)})">
+            <img class="card-image" src="${style.id}.png" alt="${style.name}" loading="lazy">
+            <div class="card-status">${ratings[style.id] === 'approved' ? '✓' : ratings[style.id] === 'rejected' ? '✗' : ''}</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">${style.name}</div>
+            <div class="card-category">${style.category}</div>
+            <div class="card-actions">
+              <button class="card-action approve-btn" onclick="rate('${style.id}', 'approved', event)">Approve</button>
+              <button class="card-action reject-btn" onclick="rate('${style.id}', 'rejected', event)">Reject</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function rate(id, status, event) {
+      if (event) event.stopPropagation();
+      if (ratings[id] === status) {
+        delete ratings[id];
+      } else {
+        ratings[id] = status;
+      }
+      localStorage.setItem('styleRatings', JSON.stringify(ratings));
+      renderGallery();
+      updateStats();
+    }
+
+    function updateStats() {
+      const visible = document.querySelectorAll('.card').length;
+      const approved = Object.values(ratings).filter(r => r === 'approved').length;
+      const rejected = Object.values(ratings).filter(r => r === 'rejected').length;
+
+      document.getElementById('visible-count').textContent = visible;
+      document.getElementById('total-count').textContent = styles.length;
+      document.getElementById('approved-count').textContent = approved;
+      document.getElementById('rejected-count').textContent = rejected;
+    }
+
+    function resetAll() {
+      if (confirm('Reset all ratings?')) {
+        ratings = {};
+        localStorage.removeItem('styleRatings');
+        renderGallery();
+        updateStats();
+      }
+    }
+
+    function exportResults() {
+      const approved = styles.filter(s => ratings[s.id] === 'approved').map(s => s.id);
+      const rejected = styles.filter(s => ratings[s.id] === 'rejected').map(s => s.id);
+      const unrated = styles.filter(s => !ratings[s.id]).map(s => s.id);
+
+      const result = {
+        approved,
+        rejected,
+        unrated,
+        summary: `${approved.length} approved, ${rejected.length} rejected, ${unrated.length} unrated`
+      };
+
+      const text = `# Style Validation Results
+
+## Summary
+${result.summary}
+
+## Approved Styles (${approved.length})
+${approved.join(', ') || 'None'}
+
+## Rejected Styles (${rejected.length})
+${rejected.join(', ') || 'None'}
+
+## Unrated Styles (${unrated.length})
+${unrated.join(', ') || 'None'}
+`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Results copied to clipboard!');
+      });
+    }
+
+    function openModal(index) {
+      currentModalIndex = index;
+      const style = styles[index];
+      document.getElementById('modal-image').src = `${style.id}.png`;
+      document.getElementById('modal-title').textContent = `${style.name} (${style.category})`;
+      document.getElementById('modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+      currentModalIndex = -1;
+    }
+
+    function navigateModal(direction) {
+      currentModalIndex = (currentModalIndex + direction + styles.length) % styles.length;
+      const style = styles[currentModalIndex];
+      document.getElementById('modal-image').src = `${style.id}.png`;
+      document.getElementById('modal-title').textContent = `${style.name} (${style.category})`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('modal').classList.contains('active')) {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft') navigateModal(-1);
+        if (e.key === 'ArrowRight') navigateModal(1);
+        if (e.key === 'a' || e.key === 'A') {
+          rate(styles[currentModalIndex].id, 'approved');
+          navigateModal(1);
+        }
+        if (e.key === 'r' || e.key === 'R') {
+          rate(styles[currentModalIndex].id, 'rejected');
+          navigateModal(1);
+        }
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

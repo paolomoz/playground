@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infographic Style Gallery - 126 Styles</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      line-height: 1.5;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #333;
+      padding: 1rem 2rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #444;
+      background: transparent;
+      color: #aaa;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #666;
+      color: #fff;
+    }
+
+    .filter-btn.active {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .counter {
+      margin-left: auto;
+      color: #666;
+      font-size: 0.9rem;
+      align-self: center;
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    .category {
+      margin-bottom: 3rem;
+    }
+
+    .category h2 {
+      font-size: 1.1rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #333;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .card.selected {
+      outline: 3px solid #4ade80;
+      outline-offset: 2px;
+    }
+
+    .card-image-container {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+    }
+
+    .card-placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+
+    .card-placeholder-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .card-content {
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-id {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      background: #2a2a2a;
+      border-radius: 10px;
+      color: #888;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-rating {
+      font-size: 0.8rem;
+      color: #f59e0b;
+    }
+
+    .card-best {
+      font-size: 0.7rem;
+      color: #666;
+      max-width: 60%;
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .selection-bar {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .selection-bar.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .selection-bar span {
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    .selection-bar button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .copy-btn {
+      background: #4ade80;
+      color: #000;
+    }
+
+    .clear-btn {
+      background: #333;
+      color: #fff;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Infographic Style Gallery - Generated Thumbnails</h1>
+    <div class="filters">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="asian">Asian Art</button>
+      <button class="filter-btn" data-category="european">European</button>
+      <button class="filter-btn" data-category="midcentury">Mid-Century</button>
+      <button class="filter-btn" data-category="comics">Comics</button>
+      <button class="filter-btn" data-category="infodesign">Info Design</button>
+      <button class="filter-btn" data-category="maps">Maps</button>
+      <button class="filter-btn" data-category="children">Children's</button>
+      <button class="filter-btn" data-category="poster">Poster</button>
+      <button class="filter-btn" data-category="digital">Digital</button>
+      <button class="filter-btn" data-category="folk">Folk</button>
+      <button class="filter-btn" data-category="games">Games</button>
+      <button class="filter-btn" data-category="architecture">Architecture</button>
+      <span class="counter" id="counter">126 styles</span>
+    </div>
+  </header>
+
+  <main id="gallery"></main>
+
+  <div class="selection-bar" id="selectionBar">
+    <span id="selectedCount">0 selected</span>
+    <button class="copy-btn" onclick="copySelected()">Copy IDs</button>
+    <button class="clear-btn" onclick="clearSelection()">Clear</button>
+  </div>
+
+  <script>
+    const styles = [
+      // CATEGORY 1: TRADITIONAL ASIAN ART
+      { id: 'ukiyo-e', name: 'Ukiyo-e Woodblock', category: 'asian', tags: ['formal', 'contemplative', 'traditional'], rating: 5, best: 'Processes, journeys' },
+      { id: 'ukiyo-e-hokusai', name: 'Hokusai Style', category: 'asian', tags: ['dramatic', 'powerful', 'nature'], rating: 5, best: 'Power, transformation' },
+      { id: 'ukiyo-e-hiroshige', name: 'Hiroshige Style', category: 'asian', tags: ['serene', 'atmospheric', 'journey'], rating: 5, best: 'Journeys, seasons' },
+      { id: 'sumi-e', name: 'Sumi-e Ink Wash', category: 'asian', tags: ['minimal', 'zen', 'philosophical'], rating: 4, best: 'Simplicity, essence' },
+      { id: 'rinpa', name: 'Rinpa School', category: 'asian', tags: ['decorative', 'gold', 'nature'], rating: 4, best: 'Premium, nature' },
+      { id: 'superflat', name: 'Superflat (Murakami)', category: 'asian', tags: ['pop', 'contemporary', 'dense'], rating: 4, best: 'Digital culture' },
+      { id: 'gongbi', name: 'Gongbi Fine Brush', category: 'asian', tags: ['precise', 'elegant', 'formal'], rating: 4, best: 'Detailed systems' },
+      { id: 'shan-shui', name: 'Shan Shui Landscape', category: 'asian', tags: ['philosophical', 'vast', 'misty'], rating: 4, best: 'Scale, perspective' },
+      { id: 'chinese-propaganda', name: 'Chinese Propaganda', category: 'asian', tags: ['optimistic', 'collective', 'bold'], rating: 4, best: 'Progress, collective' },
+      { id: 'indian-miniature', name: 'Indian Miniature', category: 'asian', tags: ['intricate', 'narrative', 'jewel-tones'], rating: 3, best: 'Complex narratives' },
+      { id: 'thai-traditional', name: 'Thai Traditional', category: 'asian', tags: ['ornate', 'gold', 'ceremonial'], rating: 3, best: 'Spiritual, ceremony' },
+      { id: 'tibetan-thangka', name: 'Tibetan Thangka', category: 'asian', tags: ['spiritual', 'mandala', 'symbolic'], rating: 4, best: 'Meditation, systems' },
+
+      // CATEGORY 2: EUROPEAN ART MOVEMENTS
+      { id: 'illuminated-manuscript', name: 'Illuminated Manuscript', category: 'european', tags: ['medieval', 'sacred', 'ornate'], rating: 4, best: 'Heritage, sacred' },
+      { id: 'renaissance-diagram', name: 'Renaissance Scientific', category: 'european', tags: ['scholarly', 'da Vinci', 'invention'], rating: 4, best: 'Innovation, invention' },
+      { id: 'dutch-golden-age', name: 'Dutch Golden Age', category: 'european', tags: ['rich', 'detailed', 'mercantile'], rating: 3, best: 'Commerce, prosperity' },
+      { id: 'art-nouveau', name: 'Art Nouveau', category: 'european', tags: ['organic', 'elegant', 'flowing'], rating: 5, best: 'Growth, organic' },
+      { id: 'art-nouveau-mucha', name: 'Mucha Poster Style', category: 'european', tags: ['theatrical', 'feminine', 'ornate'], rating: 5, best: 'User journeys' },
+      { id: 'art-nouveau-klimt', name: 'Klimt Gold Style', category: 'european', tags: ['luxurious', 'gold mosaic', 'sensual'], rating: 4, best: 'Premium, value' },
+      { id: 'art-nouveau-tiffany', name: 'Tiffany Stained Glass', category: 'european', tags: ['luminous', 'jewel-toned', 'nature'], rating: 4, best: 'Light, transformation' },
+      { id: 'arts-crafts', name: 'Arts & Crafts', category: 'european', tags: ['handmade', 'Morris', 'botanical'], rating: 4, best: 'Craft, authenticity' },
+      { id: 'art-deco', name: 'Art Deco', category: 'european', tags: ['geometric', 'luxurious', 'symmetrical'], rating: 5, best: 'Premium, achievement' },
+      { id: 'cubism', name: 'Cubist', category: 'european', tags: ['fragmented', 'multiple-perspective', 'intellectual'], rating: 3, best: 'Multiple viewpoints' },
+      { id: 'futurism', name: 'Italian Futurism', category: 'european', tags: ['speed', 'dynamism', 'technology'], rating: 4, best: 'Speed, disruption' },
+      { id: 'expressionism', name: 'Expressionism', category: 'european', tags: ['emotional', 'distorted', 'intense'], rating: 3, best: 'Emotional concepts' },
+      { id: 'bauhaus', name: 'Bauhaus', category: 'european', tags: ['systematic', 'primary-colors', 'geometric'], rating: 5, best: 'Technical systems' },
+      { id: 'de-stijl', name: 'De Stijl (Mondrian)', category: 'european', tags: ['grid', 'primary', 'mathematical'], rating: 5, best: 'Data hierarchy' },
+      { id: 'constructivism', name: 'Soviet Constructivism', category: 'european', tags: ['diagonal', 'revolutionary', 'bold'], rating: 5, best: 'Calls to action' },
+      { id: 'suprematism', name: 'Suprematism', category: 'european', tags: ['abstract', 'geometric', 'floating'], rating: 4, best: 'Abstract relationships' },
+      { id: 'kandinsky', name: 'Kandinsky Abstract', category: 'european', tags: ['musical', 'dynamic', 'circles'], rating: 4, best: 'Music, rhythm' },
+      { id: 'klee', name: 'Paul Klee', category: 'european', tags: ['playful', 'pedagogical', 'childlike'], rating: 4, best: 'Learning, creativity' },
+      { id: 'hilma-af-klint', name: 'Hilma af Klint', category: 'european', tags: ['mystical', 'diagrammatic', 'spiritual'], rating: 4, best: 'Abstract systems' },
+
+      // CATEGORY 3: MID-CENTURY & POST-WAR
+      { id: 'mid-century-modern', name: 'Mid-Century Modern', category: 'midcentury', tags: ['optimistic', 'atomic', 'clean'], rating: 5, best: 'Onboarding, features' },
+      { id: 'charley-harper', name: 'Charley Harper', category: 'midcentury', tags: ['geometric-nature', 'minimal', 'clever'], rating: 5, best: 'Nature, ecology' },
+      { id: 'mary-blair', name: 'Mary Blair', category: 'midcentury', tags: ['whimsical', 'dreamlike', 'sophisticated-color'], rating: 4, best: 'Storytelling' },
+      { id: 'eyvind-earle', name: 'Eyvind Earle', category: 'midcentury', tags: ['stylized-landscape', 'geometric-nature', 'dramatic'], rating: 4, best: 'Environment, scale' },
+      { id: 'saul-bass', name: 'Saul Bass', category: 'midcentury', tags: ['bold', 'symbolic', 'dramatic'], rating: 5, best: 'Impact statements' },
+      { id: 'paul-rand', name: 'Paul Rand', category: 'midcentury', tags: ['playful-corporate', 'smart', 'minimal'], rating: 5, best: 'Corporate, branding' },
+      { id: 'pop-art-warhol', name: 'Warhol Pop', category: 'midcentury', tags: ['repetition', 'celebrity', 'commercial'], rating: 5, best: 'Mass production' },
+      { id: 'pop-art-lichtenstein', name: 'Lichtenstein', category: 'midcentury', tags: ['ben-day-dots', 'comic', 'bold'], rating: 5, best: 'Drama, irony' },
+      { id: 'keith-haring', name: 'Keith Haring', category: 'midcentury', tags: ['universal', 'accessible', 'energetic'], rating: 5, best: 'Community, movement' },
+      { id: 'psychedelic-60s', name: '1960s Psychedelic', category: 'midcentury', tags: ['flowing', 'vibrant', 'consciousness'], rating: 4, best: 'Mind expansion' },
+      { id: 'peter-max', name: 'Peter Max', category: 'midcentury', tags: ['cosmic', 'rainbow', 'optimistic'], rating: 4, best: 'Cosmic optimism' },
+      { id: 'yellow-submarine', name: 'Yellow Submarine', category: 'midcentury', tags: ['animated-psychedelic', 'playful', 'Beatles'], rating: 4, best: 'Playful, music' },
+      { id: 'memphis', name: 'Memphis Design', category: 'midcentury', tags: ['80s', 'playful', 'anti-corporate'], rating: 5, best: 'Disruption, playfulness' },
+      { id: 'postmodern', name: 'Postmodern Graphic', category: 'midcentury', tags: ['layered', 'ironic', 'deconstructed'], rating: 3, best: 'Irony, complexity' },
+
+      // CATEGORY 4: COMICS & SEQUENTIAL ART
+      { id: 'ligne-claire', name: 'Ligne Claire (Hergé)', category: 'comics', tags: ['clean', 'readable', 'flat-color'], rating: 5, best: 'Step-by-step' },
+      { id: 'moebius', name: 'Moebius/Giraud', category: 'comics', tags: ['intricate', 'cosmic', 'sci-fi'], rating: 4, best: 'Futurism, cosmic' },
+      { id: 'valerian', name: 'Mézières (Valérian)', category: 'comics', tags: ['colorful-sci-fi', 'optimistic', 'alien'], rating: 4, best: 'Sci-fi, diverse' },
+      { id: 'joost-swarte', name: 'Joost Swarte', category: 'comics', tags: ['architectural', 'modern-ligne-claire', 'precise'], rating: 4, best: 'Architecture, design' },
+      { id: 'bd-franco-belge', name: 'Franco-Belgian BD', category: 'comics', tags: ['classic-european', 'adventure', 'clear'], rating: 4, best: 'Adventure narratives' },
+      { id: 'jack-kirby', name: 'Jack Kirby', category: 'comics', tags: ['cosmic', 'dynamic', 'powerful'], rating: 5, best: 'Power, cosmic scale' },
+      { id: 'mike-mignola', name: 'Mike Mignola (Hellboy)', category: 'comics', tags: ['gothic', 'high-contrast', 'noir'], rating: 5, best: 'Dark topics, security' },
+      { id: 'chris-ware', name: 'Chris Ware', category: 'comics', tags: ['diagrammatic', 'isometric', 'nostalgic'], rating: 4, best: 'Architecture, data' },
+      { id: 'daniel-clowes', name: 'Daniel Clowes', category: 'comics', tags: ['retro-ironic', 'deadpan', 'Americana'], rating: 4, best: 'Satire, corporate' },
+      { id: 'golden-age-comics', name: 'Golden Age Comics', category: 'comics', tags: ['vintage-heroic', 'bold', 'primary-colors'], rating: 4, best: 'Heroism, vintage' },
+      { id: 'ec-comics', name: 'EC Comics Horror', category: 'comics', tags: ['pulp', 'dramatic', 'lurid'], rating: 3, best: 'Horror, warnings' },
+      { id: 'osamu-tezuka', name: 'Osamu Tezuka', category: 'comics', tags: ['expressive', 'classic-manga', 'dynamic'], rating: 4, best: 'Transformation' },
+      { id: 'studio-ghibli', name: 'Studio Ghibli (Miyazaki)', category: 'comics', tags: ['wonder', 'nature-tech', 'environmental'], rating: 4, best: 'Environment, wonder' },
+      { id: 'akira-otomo', name: 'Katsuhiro Otomo (Akira)', category: 'comics', tags: ['cyberpunk', 'detailed', 'urban'], rating: 4, best: 'Urban, dystopia' },
+      { id: 'taiyo-matsumoto', name: 'Taiyo Matsumoto', category: 'comics', tags: ['loose', 'urban', 'emotional'], rating: 3, best: 'Authenticity, urban' },
+      { id: 'vintage-anime', name: '80s/90s Anime', category: 'comics', tags: ['nostalgic', 'cel-shaded', 'retro-future'], rating: 4, best: 'Retro sci-fi' },
+
+      // CATEGORY 5: INFORMATION DESIGN
+      { id: 'isotype', name: 'ISOTYPE (Neurath)', category: 'infodesign', tags: ['pictogram', 'statistical', 'universal'], rating: 5, best: 'Statistics, social' },
+      { id: 'minard', name: 'Minard Data Maps', category: 'infodesign', tags: ['flow-maps', 'historical', 'analytical'], rating: 3, best: 'Flow data, journey' },
+      { id: 'playfair', name: 'Playfair Charts', category: 'infodesign', tags: ['vintage-charts', 'pioneering', 'elegant'], rating: 3, best: 'Historical data' },
+      { id: 'patent-drawing', name: 'Patent Drawing', category: 'infodesign', tags: ['technical', 'exploded-view', 'authoritative'], rating: 5, best: 'Product breakdowns' },
+      { id: 'botanical-illustration', name: 'Botanical Illustration', category: 'infodesign', tags: ['precise', 'scientific', 'elegant'], rating: 5, best: 'Biology, growth' },
+      { id: 'medical-illustration', name: 'Medical/Anatomical', category: 'infodesign', tags: ['clinical', 'cutaway', 'educational'], rating: 4, best: 'Internal systems' },
+      { id: 'technical-manual', name: 'Vintage Technical Manual', category: 'infodesign', tags: ['instructional', 'cross-section', 'retro'], rating: 4, best: 'How-it-works' },
+      { id: 'haynes-manual', name: 'Haynes Manual Style', category: 'infodesign', tags: ['exploded', 'numbered-parts', 'practical'], rating: 5, best: 'Assembly, repair' },
+      { id: 'otl-aicher', name: 'Otl Aicher (Munich 72)', category: 'infodesign', tags: ['systematic-icons', 'universal', 'modernist'], rating: 5, best: 'Sports, navigation' },
+      { id: 'transit-map', name: 'Transit Map (Beck)', category: 'infodesign', tags: ['topological', 'network', 'schematic'], rating: 5, best: 'Networks, system' },
+      { id: 'ikea-assembly', name: 'IKEA Assembly Style', category: 'infodesign', tags: ['wordless', 'universal', 'sequential'], rating: 5, best: 'How-to, assembly' },
+      { id: 'airline-safety', name: 'Airline Safety Card', category: 'infodesign', tags: ['simplified', 'emergency', 'universal'], rating: 5, best: 'Critical instructions' },
+
+      // CATEGORY 6: CARTOGRAPHY & MAPS
+      { id: 'medieval-map', name: 'Medieval Mappa Mundi', category: 'maps', tags: ['mythical', 'narrative', 'here-be-dragons'], rating: 4, best: 'Journey, exploration' },
+      { id: 'treasure-map', name: 'Treasure Map', category: 'maps', tags: ['adventure', 'X-marks-spot', 'aged'], rating: 5, best: 'Gamified journey' },
+      { id: 'pictorial-map', name: 'Pictorial Tourist Map', category: 'maps', tags: ['illustrated', 'landmarks', 'friendly'], rating: 4, best: 'Location, regional' },
+      { id: 'ordnance-survey', name: 'Ordnance Survey', category: 'maps', tags: ['topographic', 'precise', 'official'], rating: 4, best: 'Terrain, geographic' },
+      { id: 'nautical-chart', name: 'Nautical Chart', category: 'maps', tags: ['maritime', 'depth', 'navigation'], rating: 4, best: 'Maritime, navigation' },
+      { id: 'star-chart', name: 'Celestial Star Chart', category: 'maps', tags: ['astronomical', 'constellation', 'mystical'], rating: 4, best: 'Space, astronomy' },
+      { id: 'fantasy-map', name: 'Fantasy Map (Tolkien)', category: 'maps', tags: ['hand-drawn', 'fantasy', 'literary'], rating: 5, best: 'World-building' },
+      { id: 'metro-map-global', name: 'Global Metro Styles', category: 'maps', tags: ['various transit', 'local flavor', 'urban'], rating: 4, best: 'Transit, urban' },
+      { id: 'board-game-map', name: 'Board Game Map', category: 'maps', tags: ['playful', 'strategic', 'game-like'], rating: 5, best: 'Gamification' },
+      { id: 'atlas-vintage', name: 'Vintage Atlas', category: 'maps', tags: ['educational', 'authoritative', 'geographic'], rating: 4, best: 'Geographic, heritage' },
+
+      // CATEGORY 7: CHILDREN'S & EDUCATIONAL
+      { id: 'richard-scarry', name: 'Richard Scarry', category: 'children', tags: ['busy', 'labeled', 'joyful'], rating: 5, best: 'Complex ecosystems' },
+      { id: 'eric-carle', name: 'Eric Carle', category: 'children', tags: ['collage', 'bold', 'tactile'], rating: 4, best: 'Growth, transformation' },
+      { id: 'dick-bruna', name: 'Dick Bruna (Miffy)', category: 'children', tags: ['minimal', 'bold-outline', 'primary'], rating: 5, best: 'Simplest concepts' },
+      { id: 'dr-seuss', name: 'Dr. Seuss', category: 'children', tags: ['whimsical', 'impossible', 'playful'], rating: 4, best: 'Imagination' },
+      { id: 'beatrix-potter', name: 'Beatrix Potter', category: 'children', tags: ['pastoral', 'detailed', 'charming'], rating: 4, best: 'Nature, tradition' },
+      { id: 'golden-book', name: 'Little Golden Books', category: 'children', tags: ['classic', 'American', 'nostalgic'], rating: 5, best: 'Nostalgic, warm' },
+      { id: 'usborne', name: 'Usborne Cross-Section', category: 'children', tags: ['cutaway', 'detailed', 'educational'], rating: 5, best: 'Educational cutaways' },
+      { id: 'dorling-kindersley', name: 'DK Visual Guide', category: 'children', tags: ['photorealistic-diagram', 'labeled', 'factual'], rating: 4, best: 'Factual reference' },
+      { id: 'textbook-diagram', name: 'Textbook Diagram', category: 'children', tags: ['educational', 'formal', 'clear'], rating: 5, best: 'Formal education' },
+      { id: 'schoolhouse-rock', name: 'Schoolhouse Rock', category: 'children', tags: ['animated', 'educational', '70s'], rating: 4, best: 'Fun learning' },
+
+      // CATEGORY 8: POSTER & PROPAGANDA
+      { id: 'wpa-national-parks', name: 'WPA National Parks', category: 'poster', tags: ['romantic', 'heritage', 'American-landscape'], rating: 5, best: 'Nature, heritage' },
+      { id: 'airline-travel-poster', name: 'Vintage Airline Poster', category: 'poster', tags: ['glamorous', 'aspirational', 'mid-century'], rating: 5, best: 'Travel, aspiration' },
+      { id: 'ski-poster', name: 'Vintage Ski Poster', category: 'poster', tags: ['dynamic', 'alpine', 'sporty'], rating: 4, best: 'Sport, adventure' },
+      { id: 'railway-poster', name: 'Railway Travel Poster', category: 'poster', tags: ['landscape', 'destination', 'British'], rating: 4, best: 'British, scenic' },
+      { id: 'soviet-propaganda', name: 'Soviet Propaganda', category: 'poster', tags: ['revolutionary', 'worker', 'bold'], rating: 5, best: 'Revolution, worker' },
+      { id: 'ww2-propaganda', name: 'WWII Propaganda', category: 'poster', tags: ['patriotic', 'urgent', 'emotional'], rating: 4, best: 'Urgency, mobilization' },
+      { id: 'cuban-poster', name: 'Cuban Film Poster', category: 'poster', tags: ['bold', 'revolutionary', 'artistic'], rating: 4, best: 'Revolutionary, artistic' },
+      { id: 'obey-fairey', name: 'Shepard Fairey (Obey)', category: 'poster', tags: ['street-art', 'political', 'iconic'], rating: 5, best: 'Political, iconic' },
+      { id: 'circus-poster', name: 'Vintage Circus Poster', category: 'poster', tags: ['spectacular', 'bold-type', 'entertainment'], rating: 4, best: 'Spectacle, events' },
+      { id: 'concert-poster', name: 'Concert/Gig Poster', category: 'poster', tags: ['music', 'bold', 'artistic'], rating: 4, best: 'Music, events' },
+      { id: 'movie-poster-classic', name: 'Classic Movie Poster', category: 'poster', tags: ['cinematic', 'dramatic', 'painted'], rating: 4, best: 'Entertainment, drama' },
+      { id: 'polish-poster', name: 'Polish Film Poster', category: 'poster', tags: ['surreal', 'artistic', 'metaphorical'], rating: 4, best: 'Surreal concepts' },
+
+      // CATEGORY 9: DIGITAL & CONTEMPORARY
+      { id: 'flat-design', name: 'Flat Design', category: 'digital', tags: ['clean', 'minimal', 'modern'], rating: 5, best: 'Modern UI/UX, apps' },
+      { id: 'material-design', name: 'Material Design', category: 'digital', tags: ['layered', 'shadow', 'Google'], rating: 5, best: 'Google ecosystem' },
+      { id: 'neomorphism', name: 'Neomorphism', category: 'digital', tags: ['soft', 'extruded', 'tactile'], rating: 4, best: 'Soft UI, tactile' },
+      { id: 'glassmorphism', name: 'Glassmorphism', category: 'digital', tags: ['translucent', 'frosted', 'modern'], rating: 4, best: 'Apple aesthetic' },
+      { id: 'gradient-mesh', name: 'Gradient Mesh', category: 'digital', tags: ['flowing', 'vibrant', 'contemporary'], rating: 4, best: 'Contemporary, fluid' },
+      { id: 'pixel-art', name: 'Pixel Art', category: 'digital', tags: ['8-bit', 'nostalgic', 'gaming'], rating: 5, best: 'Gaming, retro' },
+      { id: 'vaporwave', name: 'Vaporwave', category: 'digital', tags: ['80s-90s', 'ironic', 'digital'], rating: 4, best: 'Ironic nostalgia' },
+      { id: 'synthwave', name: 'Synthwave', category: 'digital', tags: ['neon', 'grid', 'retro-future'], rating: 5, best: 'Retro-futurism' },
+      { id: 'low-poly', name: 'Low Poly 3D', category: 'digital', tags: ['faceted', 'modern', 'clean-3D'], rating: 4, best: 'Modern 3D' },
+      { id: 'cel-shaded', name: 'Cel-Shaded 3D', category: 'digital', tags: ['comics-3D', 'approachable', 'game'], rating: 4, best: '3D with warmth' },
+      { id: 'malika-favre', name: 'Malika Favre', category: 'digital', tags: ['negative-space', 'bold', 'clever'], rating: 4, best: 'Clever reveals' },
+      { id: 'risograph', name: 'Risograph Print', category: 'digital', tags: ['textured', 'layered', 'indie'], rating: 4, best: 'Indie, startup' },
+      { id: 'editorial-modern', name: 'Modern Editorial', category: 'digital', tags: ['sophisticated', 'conceptual', 'magazine'], rating: 4, best: 'Editorial, conceptual' },
+      { id: 'tech-company-illustration', name: 'Tech Company Style', category: 'digital', tags: ['friendly', 'geometric-characters', 'startup'], rating: 5, best: 'Tech products, SaaS' },
+
+      // CATEGORY 10: FOLK & TRADITIONAL
+      { id: 'scandinavian-folk', name: 'Scandinavian Folk', category: 'folk', tags: ['clean', 'nature', 'hygge'], rating: 4, best: 'Simplicity, wellness' },
+      { id: 'russian-folk', name: 'Russian Folk (Palekh)', category: 'folk', tags: ['lacquer', 'fairy-tale', 'ornate'], rating: 4, best: 'Fairy tale, fantasy' },
+      { id: 'polish-folk', name: 'Polish Paper Cut (Wycinanki)', category: 'folk', tags: ['symmetrical', 'paper-cut', 'colorful'], rating: 4, best: 'Celebration, symmetry' },
+      { id: 'celtic', name: 'Celtic Knotwork', category: 'folk', tags: ['interlaced', 'eternal', 'manuscript'], rating: 4, best: 'Eternal cycles' },
+      { id: 'greek-vase', name: 'Greek Vase Painting', category: 'folk', tags: ['black-figure', 'red-figure', 'classical'], rating: 4, best: 'Classical, mythology' },
+      { id: 'mexican-folk', name: 'Mexican Folk Art', category: 'folk', tags: ['vibrant', 'Oaxacan', 'alebrijes'], rating: 4, best: 'Creativity, celebration' },
+      { id: 'dia-de-muertos', name: 'Día de los Muertos', category: 'folk', tags: ['skull', 'festive-death', 'celebratory'], rating: 5, best: 'Life/death cycles' },
+      { id: 'mayan-codex', name: 'Mayan Codex', category: 'folk', tags: ['glyph', 'pre-Columbian', 'symbolic'], rating: 3, best: 'Ancient systems' },
+      { id: 'african-textile', name: 'African Textile (Kente/Ankara)', category: 'folk', tags: ['bold-pattern', 'symbolic', 'vibrant'], rating: 4, best: 'Bold patterns' },
+      { id: 'persian-miniature', name: 'Persian Miniature', category: 'folk', tags: ['intricate', 'garden', 'poetic'], rating: 3, best: 'Complex narrative' },
+      { id: 'islamic-geometric', name: 'Islamic Geometric', category: 'folk', tags: ['mathematical', 'infinite', 'tessellation'], rating: 4, best: 'Mathematical patterns' },
+      { id: 'egyptian-ancient', name: 'Ancient Egyptian', category: 'folk', tags: ['hieroglyphic', 'profile', 'symbolic'], rating: 4, best: 'Ancient systems' },
+
+      // CATEGORY 11: VIDEO GAMES
+      { id: '8-bit-nes', name: '8-bit NES', category: 'games', tags: ['limited-palette', 'chunky', 'nostalgic'], rating: 5, best: '80s nostalgia, gaming' },
+      { id: '16-bit-snes', name: '16-bit SNES/Genesis', category: 'games', tags: ['richer-pixel', '90s', 'detailed-retro'], rating: 5, best: '90s nostalgia' },
+      { id: 'monument-valley', name: 'Monument Valley', category: 'games', tags: ['impossible-architecture', 'serene', 'puzzle'], rating: 4, best: 'Impossible geometry' },
+      { id: 'firewatch', name: 'Firewatch/Olly Moss', category: 'games', tags: ['landscape-layers', 'atmospheric', 'outdoors'], rating: 5, best: 'Nature, atmospheric' },
+      { id: 'cuphead', name: 'Cuphead (1930s cartoon)', category: 'games', tags: ['rubber-hose', 'vintage-animation', 'bouncy'], rating: 5, best: 'Retro animation' },
+      { id: 'hollow-knight', name: 'Hollow Knight', category: 'games', tags: ['dark', 'cute-gothic', 'hand-drawn'], rating: 4, best: 'Dark but approachable' },
+      { id: 'journey-game', name: 'Journey (game)', category: 'games', tags: ['minimal', 'vast', 'spiritual'], rating: 4, best: 'Spiritual journey' },
+      { id: 'ori', name: 'Ori and the Blind Forest', category: 'games', tags: ['painterly', 'glowing', 'magical-forest'], rating: 4, best: 'Nature magic' },
+
+      // CATEGORY 12: ARCHITECTURAL & TECHNICAL
+      { id: 'isometric-technical', name: 'Isometric Technical', category: 'architecture', tags: ['3D-no-perspective', 'precise', 'exploded'], rating: 5, best: 'System architecture' },
+      { id: 'architectural-blueprint', name: 'Blueprint', category: 'architecture', tags: ['technical', 'precise', 'authoritative'], rating: 5, best: 'Engineering, specs' },
+      { id: 'architectural-section', name: 'Section Drawing', category: 'architecture', tags: ['cutaway', 'spatial', 'architectural'], rating: 4, best: 'Buildings, spatial' },
+      { id: 'axonometric', name: 'Axonometric', category: 'architecture', tags: ['parallel-projection', 'architectural', 'precise'], rating: 4, best: 'Architecture, urban' },
+      { id: 'bauhaus-architecture', name: 'Bauhaus Architectural', category: 'architecture', tags: ['modernist', 'functional', 'geometric-building'], rating: 4, best: 'Modernist, functional' },
+      { id: 'googie', name: 'Googie/Atomic Age', category: 'architecture', tags: ['space-age', 'futuristic-retro', 'optimistic'], rating: 4, best: 'Retro-futurism' },
+      { id: 'brutalist', name: 'Brutalist', category: 'architecture', tags: ['concrete', 'massive', 'imposing'], rating: 4, best: 'Imposing, institutional' },
+      { id: 'fantasy-architecture', name: 'Fantasy Architecture', category: 'architecture', tags: ['impossible', 'fantastical', 'imaginative'], rating: 4, best: 'Fantasy, impossible' },
+    ];
+
+    const categoryNames = {
+      asian: 'Traditional Asian Art',
+      european: 'European Art Movements',
+      midcentury: 'Mid-Century & Post-War',
+      comics: 'Comics & Sequential Art',
+      infodesign: 'Information Design',
+      maps: 'Cartography & Maps',
+      children: "Children's & Educational",
+      poster: 'Poster & Propaganda',
+      digital: 'Digital & Contemporary',
+      folk: 'Folk & Traditional',
+      games: 'Video Games',
+      architecture: 'Architectural & Technical'
+    };
+
+    let selected = new Set();
+    let currentFilter = 'all';
+
+    function render() {
+      const gallery = document.getElementById('gallery');
+      const filteredStyles = currentFilter === 'all'
+        ? styles
+        : styles.filter(s => s.category === currentFilter);
+
+      // Group by category
+      const grouped = {};
+      filteredStyles.forEach(style => {
+        if (!grouped[style.category]) grouped[style.category] = [];
+        grouped[style.category].push(style);
+      });
+
+      let html = '';
+      Object.entries(grouped).forEach(([cat, items]) => {
+        html += `<section class="category" data-category="${cat}">
+          <h2>${categoryNames[cat]} (${items.length})</h2>
+          <div class="grid">
+            ${items.map(style => `
+              <div class="card ${selected.has(style.id) ? 'selected' : ''}"
+                   data-id="${style.id}"
+                   onclick="toggleSelect('${style.id}')">
+                <div class="card-image-container">
+                  <img class="card-image"
+                       src="style-thumbnails/${style.id}.png"
+                       alt="${style.name}"
+                       loading="lazy"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="card-placeholder" style="display:none; --bg1: #2a2a2a; --bg2: #3a3a3a">
+                    <div class="card-placeholder-name">${style.name}<br><small>(no thumbnail)</small></div>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <div class="card-title">${style.name}</div>
+                  <div class="card-id">${style.id}</div>
+                  <div class="card-tags">
+                    ${style.tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('')}
+                  </div>
+                  <div class="card-meta">
+                    <div class="card-rating">${'★'.repeat(style.rating)}${'☆'.repeat(5 - style.rating)}</div>
+                    <div class="card-best">${style.best}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>`;
+      });
+
+      gallery.innerHTML = html;
+      document.getElementById('counter').textContent = `${filteredStyles.length} styles`;
+      updateSelectionBar();
+    }
+
+    function toggleSelect(id) {
+      if (selected.has(id)) {
+        selected.delete(id);
+      } else {
+        selected.add(id);
+      }
+      document.querySelectorAll(`.card[data-id="${id}"]`).forEach(el => {
+        el.classList.toggle('selected', selected.has(id));
+      });
+      updateSelectionBar();
+    }
+
+    function updateSelectionBar() {
+      const bar = document.getElementById('selectionBar');
+      const count = document.getElementById('selectedCount');
+      if (selected.size > 0) {
+        bar.classList.add('visible');
+        count.textContent = `${selected.size} selected`;
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function copySelected() {
+      const ids = Array.from(selected).join(', ');
+      navigator.clipboard.writeText(ids).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy IDs', 1500);
+      });
+    }
+
+    function clearSelection() {
+      selected.clear();
+      document.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+      updateSelectionBar();
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.category;
+        render();
+      });
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
