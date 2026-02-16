@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Preference Rater</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --border: #e5e5e5;
+    --text: #1a1a1a;
+    --text-secondary: #666;
+    --text-tertiary: #999;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-light: #dbeafe;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ─── WELCOME SCREEN ─── */
+  #welcome {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  #welcome .hero { max-width: 600px; }
+  #welcome h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+  }
+  #welcome p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+  }
+  #welcome .instructions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+  #welcome .instructions h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+  }
+  #welcome .instructions ol {
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  #welcome .instructions li { margin-bottom: 0.4rem; }
+  #welcome .instructions li strong { color: var(--text); }
+
+  .kbd {
+    display: inline-block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: monospace;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg); border-color: #ccc; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-success:hover { background: #15803d; }
+  .btn-danger { background: white; color: var(--danger); border: 1px solid #fecaca; }
+  .btn-danger:hover { background: #fef2f2; }
+  .btn-sm { padding: 0.4rem 1rem; font-size: 0.85rem; }
+
+  .welcome-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .resume-info {
+    background: var(--success-light);
+    border: 1px solid #bbf7d0;
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #15803d;
+  }
+  .profile-info {
+    background: var(--accent-light);
+    border: 1px solid #93c5fd;
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #1e40af;
+    text-align: left;
+  }
+  .profile-info strong { display: block; margin-bottom: 0.25rem; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    margin: 1rem 0;
+    width: 100%;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .drop-zone input[type="file"] { display: none; }
+
+  /* ─── ADD SITES SCREEN ─── */
+  #addSites {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .add-sites-container { max-width: 600px; width: 100%; }
+  .add-sites-container h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .add-sites-container > p {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .url-input-area {
+    width: 100%;
+    min-height: 180px;
+    font-family: monospace;
+    font-size: 0.88rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    resize: vertical;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .url-input-area::placeholder { color: var(--text-tertiary); }
+  .url-hint {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+  .add-sites-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  /* ─── RATING SCREEN ─── */
+  #rating { height: 100vh; }
+  .rating-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .progress-section { display: flex; align-items: center; gap: 0.75rem; }
+  .progress-bar {
+    width: 200px;
+    height: 6px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .progress-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .batch-label {
+    font-size: 0.75rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+  .header-actions { display: flex; gap: 0.5rem; }
+
+  .rating-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  .company-card { text-align: center; max-width: 600px; }
+  .company-rank {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+  }
+  .company-name {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .company-industry {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+  }
+  .company-url {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    font-family: monospace;
+    margin-bottom: 1.25rem;
+    word-break: break-all;
+  }
+  .open-site-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    background: var(--text);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .open-site-btn:hover { background: #333; transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+
+  .rating-controls { text-align: center; width: 100%; max-width: 600px; }
+  .rating-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+  }
+  .rating-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .rate-btn {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rate-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .rate-btn.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  }
+
+  /* ─── TAG SELECTOR ─── */
+  .tag-selector {
+    display: none;
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-top: 0.5rem;
+  }
+  .tag-selector.visible { display: block; }
+  .tag-selector h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+  }
+  .tag-group {
+    margin-bottom: 1rem;
+  }
+  .tag-group-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+  }
+  .tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tag-chip {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.1s;
+    background: var(--surface);
+    color: var(--text-secondary);
+    user-select: none;
+  }
+  .tag-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .tag-chip.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .rating-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .skip-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.15s;
+  }
+  .skip-btn:hover { color: var(--text-secondary); }
+  .confirm-btn {
+    padding: 0.6rem 2rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.4;
+    pointer-events: none;
+    transition: all 0.15s;
+  }
+  .confirm-btn.enabled { opacity: 1; pointer-events: auto; }
+  .confirm-btn.enabled:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .keyboard-hint {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    margin-top: 0.75rem;
+  }
+
+  /* ─── RESULTS SCREEN ─── */
+  #results { padding: 2rem; align-items: center; }
+  .results-container { max-width: 800px; width: 100%; }
+  .results-header { text-align: center; margin-bottom: 2.5rem; }
+  .results-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .results-header p { color: var(--text-secondary); }
+  .results-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .results-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .results-section h2 .badge {
+    font-size: 0.7rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pref-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--bg);
+  }
+  .pref-row:last-child { border-bottom: none; }
+  .pref-label {
+    width: 170px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+  .pref-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .pref-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .pref-score {
+    width: 36px;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .dna-box {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+  }
+  .top-sites, .bottom-sites {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .site-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  .site-pill .score { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .site-pill .score.high { color: var(--success); }
+  .site-pill .score.low { color: var(--danger); }
+  .site-pill .source-badge {
+    font-size: 0.65rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--text-tertiary);
+    margin-left: 0.35rem;
+  }
+
+  .export-area {
+    width: 100%;
+    min-height: 200px;
+    font-family: monospace;
+    font-size: 0.82rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    resize: vertical;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .export-buttons { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+  .results-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+
+  .save-banner {
+    background: var(--success-light);
+    border: 1px solid #bbf7d0;
+    border-radius: var(--radius);
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #15803d;
+    font-size: 0.9rem;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .session-list {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .session-list li { margin-bottom: 0.3rem; }
+
+  @media (max-width: 640px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .top-sites, .bottom-sites { grid-template-columns: 1fr; }
+    .rating-buttons { gap: 0.35rem; }
+    .rate-btn { width: 40px; height: 40px; font-size: 0.95rem; }
+    .progress-bar { width: 120px; }
+    .company-name { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ WELCOME SCREEN ══════════════ -->
+<div id="welcome" class="screen active">
+  <div class="hero">
+    <h1>Design Preference Rater</h1>
+    <p>Rate websites to build a persistent design preference profile. Start with the Fortune 100, then add your own sites to sharpen the signal.</p>
+
+    <div class="instructions">
+      <h3>How it works</h3>
+      <ol>
+        <li>Click <strong>Open Website</strong> to view each site in a new tab</li>
+        <li>Switch back and <strong>rate it 0–10</strong> based on design appeal</li>
+        <li>Keyboard shortcuts: <span class="kbd">0</span>–<span class="kbd">9</span> rate, <span class="kbd">Shift+0</span> = 10, <span class="kbd">Enter</span> confirm, <span class="kbd">S</span> skip</li>
+        <li>Your profile <strong>persists to a file</strong> — load it back anytime to add more ratings</li>
+      </ol>
+    </div>
+
+    <div id="profileInfo" class="profile-info" style="display:none"></div>
+    <div id="resumeInfo" class="resume-info" style="display:none"></div>
+
+    <div class="welcome-buttons">
+      <button class="btn btn-primary" onclick="startFortune100(false)">Rate Fortune 100</button>
+      <button id="resumeBtn" class="btn btn-secondary" style="display:none" onclick="startFortune100(true)">Resume Fortune 100</button>
+      <button class="btn btn-secondary" onclick="showScreen('addSites')">Add Custom Sites</button>
+    </div>
+
+    <div class="divider">or load existing profile</div>
+
+    <div class="drop-zone" id="dropZone">
+      Drop <strong>design-preferences.json</strong> here or click to browse
+      <input type="file" id="fileInput" accept=".json">
+    </div>
+
+    <div class="welcome-buttons">
+      <button id="viewResultsBtn" class="btn btn-secondary btn-sm" style="display:none" onclick="showResults()">View Current Results</button>
+      <button id="resetBtn" class="btn btn-danger btn-sm" style="display:none" onclick="resetAll()">Reset Everything</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADD SITES SCREEN ══════════════ -->
+<div id="addSites" class="screen">
+  <div class="add-sites-container" style="margin:auto;">
+    <h1>Add Custom Sites</h1>
+    <p>Paste URLs to rate. Each new batch sharpens your preference profile.</p>
+
+    <textarea class="url-input-area" id="urlInput" placeholder="One URL per line. Optionally add a name and industry:
+
+https://stripe.com
+Notion | https://notion.so | Productivity
+Linear | https://linear.app
+https://vercel.com"></textarea>
+    <div class="url-hint">
+      Formats: <code>URL</code> &nbsp; <code>Name | URL</code> &nbsp; <code>Name | URL | Industry</code>
+    </div>
+
+    <div class="add-sites-buttons">
+      <button class="btn btn-secondary" onclick="showScreen('welcome')">Cancel</button>
+      <button class="btn btn-primary" onclick="startCustomBatch()">Start Rating</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RATING SCREEN ══════════════ -->
+<div id="rating" class="screen">
+  <div class="rating-header">
+    <div class="progress-section">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-text" id="progressText">0 / 0</span>
+      <span class="batch-label" id="batchLabel">Fortune 100</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary btn-sm" onclick="finishEarly()">Finish</button>
+    </div>
+  </div>
+  <div class="rating-body">
+    <div class="company-card">
+      <div class="company-rank" id="companyRank"></div>
+      <div class="company-name" id="companyName"></div>
+      <div class="company-url" id="companyUrl"></div>
+      <button class="open-site-btn" onclick="openCurrentSite()">Open Website ↗</button>
+    </div>
+    <div class="rating-controls">
+      <div class="rating-label">Your rating</div>
+      <div class="rating-buttons" id="ratingButtons"></div>
+
+      <div class="tag-selector" id="tagSelector">
+        <h3>Describe this site's design (click all that apply)</h3>
+        <div id="tagGroups"></div>
+      </div>
+
+      <div class="rating-actions">
+        <button class="skip-btn" onclick="skipCurrent()">Skip</button>
+        <button class="confirm-btn" id="confirmBtn" onclick="confirmRating()">Confirm</button>
+      </div>
+      <div class="keyboard-hint">
+        <span class="kbd">0</span>–<span class="kbd">9</span> rate &nbsp;
+        <span class="kbd">Shift+0</span> = 10 &nbsp;
+        <span class="kbd">Enter</span> confirm &nbsp;
+        <span class="kbd">S</span> skip &nbsp;
+        <span class="kbd">O</span> open
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RESULTS SCREEN ══════════════ -->
+<div id="results" class="screen">
+  <div class="results-container" id="resultsContainer"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  FORTUNE 100 COMPANIES WITH DESIGN TAGS
+// ══════════════════════════════════════════════
+const fortune100 = [
+  { rank:1, name:"Walmart", url:"https://www.walmart.com", industry:"Retail", tags:["light-theme","dense","consumer","full-bleed","product-focused","card-layout","mega-menu","colorful"], source:"fortune100" },
+  { rank:2, name:"Amazon", url:"https://www.amazon.com", industry:"E-commerce / Tech", tags:["light-theme","dense","consumer","full-bleed","product-focused","card-layout","mega-menu","colorful"], source:"fortune100" },
+  { rank:3, name:"Apple", url:"https://www.apple.com", industry:"Technology", tags:["dark-theme","clean-minimal","spacious","large-typography","product-focused","animated","modern-tech","hero-image","bold-design"], source:"fortune100" },
+  { rank:4, name:"UnitedHealth Group", url:"https://www.unitedhealthgroup.com", industry:"Healthcare", tags:["light-theme","corporate","spacious","hero-image","people-focused","clean-minimal","serif","contained"], source:"fortune100" },
+  { rank:5, name:"Berkshire Hathaway", url:"https://www.berkshirehathaway.com", industry:"Conglomerate", tags:["light-theme","clean-minimal","sparse","contained","corporate","minimal-nav","serif"], source:"fortune100" },
+  { rank:6, name:"CVS Health", url:"https://www.cvshealth.com", industry:"Healthcare / Retail", tags:["light-theme","corporate","hero-image","people-focused","clean-minimal","spacious","vibrant-accent"], source:"fortune100" },
+  { rank:7, name:"ExxonMobil", url:"https://corporate.exxonmobil.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","clean-minimal","contained"], source:"fortune100" },
+  { rank:8, name:"Alphabet (Google)", url:"https://abc.xyz", industry:"Technology", tags:["light-theme","clean-minimal","spacious","geometric-sans","modern-tech","animated","bold-design","large-typography"], source:"fortune100" },
+  { rank:9, name:"McKesson", url:"https://www.mckesson.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","clean-minimal","spacious","people-focused","gradient"], source:"fortune100" },
+  { rank:10, name:"Cigna Group", url:"https://www.thecignagroup.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","spacious","people-focused","vibrant-accent","clean-minimal"], source:"fortune100" },
+  { rank:11, name:"Costco", url:"https://www.costco.com", industry:"Retail", tags:["light-theme","dense","consumer","product-focused","card-layout","full-bleed","colorful"], source:"fortune100" },
+  { rank:12, name:"Microsoft", url:"https://www.microsoft.com", industry:"Technology", tags:["light-theme","clean-minimal","spacious","hero-image","modern-tech","animated","gradient","card-layout","product-focused","geometric-sans"], source:"fortune100" },
+  { rank:13, name:"Cardinal Health", url:"https://www.cardinalhealth.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","clean-minimal","spacious","people-focused"], source:"fortune100" },
+  { rank:14, name:"Chevron", url:"https://www.chevron.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","contained","clean-minimal","vibrant-accent"], source:"fortune100" },
+  { rank:15, name:"Cencora", url:"https://www.cencora.com", industry:"Healthcare", tags:["light-theme","modern-tech","gradient","spacious","clean-minimal","hero-image","animated","bold-design"], source:"fortune100" },
+  { rank:16, name:"Ford Motor", url:"https://www.ford.com", industry:"Automotive", tags:["dark-theme","bold-design","hero-image","product-focused","modern-tech","animated","full-bleed","large-typography"], source:"fortune100" },
+  { rank:17, name:"General Motors", url:"https://www.gm.com", industry:"Automotive", tags:["light-theme","clean-minimal","spacious","modern-tech","hero-image","product-focused","animated","bold-design"], source:"fortune100" },
+  { rank:18, name:"JPMorgan Chase", url:"https://www.jpmorganchase.com", industry:"Financial Services", tags:["light-theme","corporate","spacious","serif","hero-image","editorial","people-focused","clean-minimal"], source:"fortune100" },
+  { rank:19, name:"Elevance Health", url:"https://www.elevancehealth.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","spacious","people-focused","gradient","clean-minimal","vibrant-accent"], source:"fortune100" },
+  { rank:20, name:"Marathon Petroleum", url:"https://www.marathonpetroleum.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","contained","clean-minimal"], source:"fortune100" },
+  { rank:21, name:"Kroger", url:"https://www.kroger.com", industry:"Retail", tags:["light-theme","consumer","product-focused","card-layout","colorful","dense","full-bleed","mega-menu"], source:"fortune100" },
+  { rank:22, name:"Fannie Mae", url:"https://www.fanniemae.com", industry:"Financial Services", tags:["light-theme","corporate","spacious","clean-minimal","hero-image","contained","vibrant-accent"], source:"fortune100" },
+  { rank:23, name:"Bank of America", url:"https://www.bankofamerica.com", industry:"Financial Services", tags:["light-theme","corporate","clean-minimal","vibrant-accent","consumer","hero-image","contained"], source:"fortune100" },
+  { rank:24, name:"Phillips 66", url:"https://www.phillips66.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","contained","clean-minimal"], source:"fortune100" },
+  { rank:25, name:"Valero Energy", url:"https://www.valero.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","contained","clean-minimal"], source:"fortune100" },
+  { rank:26, name:"Walgreens Boots Alliance", url:"https://www.walgreensbootsalliance.com", industry:"Retail / Healthcare", tags:["light-theme","corporate","hero-image","clean-minimal","spacious","people-focused"], source:"fortune100" },
+  { rank:27, name:"Citigroup", url:"https://www.citigroup.com", industry:"Financial Services", tags:["light-theme","corporate","clean-minimal","spacious","hero-image","vibrant-accent","editorial","contained"], source:"fortune100" },
+  { rank:28, name:"Home Depot", url:"https://www.homedepot.com", industry:"Retail", tags:["light-theme","dense","consumer","product-focused","card-layout","mega-menu","colorful","full-bleed"], source:"fortune100" },
+  { rank:29, name:"State Farm", url:"https://www.statefarm.com", industry:"Insurance", tags:["light-theme","consumer","clean-minimal","vibrant-accent","hero-image","people-focused","contained"], source:"fortune100" },
+  { rank:30, name:"Comcast", url:"https://corporate.comcast.com", industry:"Telecom / Media", tags:["light-theme","corporate","hero-image","spacious","modern-tech","animated","clean-minimal","gradient"], source:"fortune100" },
+  { rank:31, name:"Wells Fargo", url:"https://www.wellsfargo.com", industry:"Financial Services", tags:["light-theme","corporate","clean-minimal","consumer","hero-image","contained","vibrant-accent"], source:"fortune100" },
+  { rank:32, name:"AT&T", url:"https://www.att.com", industry:"Telecom", tags:["light-theme","consumer","hero-image","modern-tech","clean-minimal","card-layout","vibrant-accent","full-bleed"], source:"fortune100" },
+  { rank:33, name:"Target", url:"https://corporate.target.com", industry:"Retail", tags:["light-theme","clean-minimal","spacious","vibrant-accent","hero-image","editorial","bold-design","people-focused"], source:"fortune100" },
+  { rank:34, name:"Johnson & Johnson", url:"https://www.jnj.com", industry:"Pharma / Consumer Health", tags:["light-theme","corporate","spacious","hero-image","people-focused","clean-minimal","serif","editorial"], source:"fortune100" },
+  { rank:35, name:"General Electric", url:"https://www.ge.com", industry:"Industrial", tags:["dark-theme","modern-tech","bold-design","hero-image","animated","spacious","large-typography","clean-minimal"], source:"fortune100" },
+  { rank:36, name:"Goldman Sachs", url:"https://www.goldmansachs.com", industry:"Financial Services", tags:["light-theme","corporate","editorial","spacious","serif","luxury-feel","hero-image","clean-minimal","contained"], source:"fortune100" },
+  { rank:37, name:"Centene", url:"https://www.centene.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","people-focused","clean-minimal","spacious","vibrant-accent"], source:"fortune100" },
+  { rank:38, name:"Procter & Gamble", url:"https://www.pg.com", industry:"Consumer Goods", tags:["light-theme","corporate","hero-image","product-focused","clean-minimal","spacious","colorful","people-focused"], source:"fortune100" },
+  { rank:39, name:"Freddie Mac", url:"https://www.freddiemac.com", industry:"Financial Services", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","contained","vibrant-accent","people-focused"], source:"fortune100" },
+  { rank:40, name:"Tesla", url:"https://www.tesla.com", industry:"Automotive / Energy", tags:["dark-theme","clean-minimal","spacious","bold-design","hero-image","product-focused","animated","modern-tech","full-bleed","large-typography"], source:"fortune100" },
+  { rank:41, name:"Morgan Stanley", url:"https://www.morganstanley.com", industry:"Financial Services", tags:["light-theme","corporate","editorial","spacious","serif","luxury-feel","hero-image","clean-minimal","contained"], source:"fortune100" },
+  { rank:42, name:"Archer Daniels Midland", url:"https://www.adm.com", industry:"Agriculture", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","clean-minimal","contained"], source:"fortune100" },
+  { rank:43, name:"Koch Industries", url:"https://www.kochind.com", industry:"Conglomerate", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","contained","photo-heavy"], source:"fortune100" },
+  { rank:44, name:"Walt Disney", url:"https://thewaltdisneycompany.com", industry:"Entertainment", tags:["light-theme","editorial","hero-image","spacious","clean-minimal","people-focused","colorful","serif"], source:"fortune100" },
+  { rank:45, name:"PepsiCo", url:"https://www.pepsico.com", industry:"Food & Beverage", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","product-focused","vibrant-accent","bold-design"], source:"fortune100" },
+  { rank:46, name:"Humana", url:"https://www.humana.com", industry:"Healthcare", tags:["light-theme","consumer","hero-image","clean-minimal","spacious","people-focused","vibrant-accent","card-layout"], source:"fortune100" },
+  { rank:47, name:"American Express", url:"https://www.americanexpress.com", industry:"Financial Services", tags:["light-theme","luxury-feel","clean-minimal","spacious","hero-image","gradient","modern-tech","product-focused"], source:"fortune100" },
+  { rank:48, name:"Meta Platforms", url:"https://about.meta.com", industry:"Technology", tags:["light-theme","modern-tech","spacious","clean-minimal","hero-image","animated","gradient","bold-design","large-typography"], source:"fortune100" },
+  { rank:49, name:"Intel", url:"https://www.intel.com", industry:"Technology", tags:["light-theme","modern-tech","hero-image","product-focused","spacious","clean-minimal","gradient","animated","card-layout"], source:"fortune100" },
+  { rank:50, name:"Caterpillar", url:"https://www.caterpillar.com", industry:"Industrial", tags:["dark-theme","bold-design","hero-image","product-focused","photo-heavy","full-bleed","large-typography"], source:"fortune100" },
+  { rank:51, name:"AbbVie", url:"https://www.abbvie.com", industry:"Pharma", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","people-focused","vibrant-accent","gradient"], source:"fortune100" },
+  { rank:52, name:"Verizon", url:"https://www.verizon.com", industry:"Telecom", tags:["light-theme","consumer","hero-image","modern-tech","clean-minimal","product-focused","vibrant-accent","card-layout"], source:"fortune100" },
+  { rank:53, name:"IBM", url:"https://www.ibm.com", industry:"Technology", tags:["dark-theme","modern-tech","spacious","clean-minimal","geometric-sans","bold-design","animated","gradient","editorial","large-typography"], source:"fortune100" },
+  { rank:54, name:"HP", url:"https://www.hp.com", industry:"Technology", tags:["light-theme","modern-tech","product-focused","clean-minimal","hero-image","card-layout","spacious","animated"], source:"fortune100" },
+  { rank:55, name:"HCA Healthcare", url:"https://hcahealthcare.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","people-focused","clean-minimal","spacious","contained"], source:"fortune100" },
+  { rank:56, name:"Dell Technologies", url:"https://www.dell.com", industry:"Technology", tags:["light-theme","modern-tech","product-focused","card-layout","clean-minimal","consumer","hero-image","full-bleed"], source:"fortune100" },
+  { rank:57, name:"RTX (Raytheon)", url:"https://www.rtx.com", industry:"Aerospace & Defense", tags:["dark-theme","corporate","hero-image","photo-heavy","bold-design","spacious","modern-tech","animated"], source:"fortune100" },
+  { rank:58, name:"UPS", url:"https://www.ups.com", industry:"Logistics", tags:["light-theme","consumer","clean-minimal","hero-image","product-focused","vibrant-accent","contained"], source:"fortune100" },
+  { rank:59, name:"Lockheed Martin", url:"https://www.lockheedmartin.com", industry:"Aerospace & Defense", tags:["dark-theme","corporate","hero-image","photo-heavy","bold-design","modern-tech","spacious","animated"], source:"fortune100" },
+  { rank:60, name:"Pfizer", url:"https://www.pfizer.com", industry:"Pharma", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","people-focused","vibrant-accent","modern-tech","gradient"], source:"fortune100" },
+  { rank:61, name:"FedEx", url:"https://www.fedex.com", industry:"Logistics", tags:["light-theme","consumer","clean-minimal","hero-image","card-layout","vibrant-accent","contained"], source:"fortune100" },
+  { rank:62, name:"Delta Air Lines", url:"https://www.delta.com", industry:"Airlines", tags:["light-theme","consumer","hero-image","clean-minimal","spacious","photo-heavy","vibrant-accent","modern-tech"], source:"fortune100" },
+  { rank:63, name:"Nike", url:"https://www.nike.com", industry:"Apparel", tags:["dark-theme","bold-design","hero-image","product-focused","animated","full-bleed","large-typography","modern-tech","clean-minimal"], source:"fortune100" },
+  { rank:64, name:"Merck", url:"https://www.merck.com", industry:"Pharma", tags:["light-theme","corporate","hero-image","spacious","people-focused","clean-minimal","vibrant-accent","contained"], source:"fortune100" },
+  { rank:65, name:"Cisco", url:"https://www.cisco.com", industry:"Technology", tags:["light-theme","modern-tech","hero-image","clean-minimal","spacious","gradient","animated","card-layout","vibrant-accent"], source:"fortune100" },
+  { rank:66, name:"TJX Companies", url:"https://www.tjx.com", industry:"Retail", tags:["light-theme","corporate","clean-minimal","contained","spacious","hero-image","people-focused"], source:"fortune100" },
+  { rank:67, name:"Nationwide", url:"https://www.nationwide.com", industry:"Insurance", tags:["light-theme","consumer","hero-image","clean-minimal","vibrant-accent","people-focused","card-layout"], source:"fortune100" },
+  { rank:68, name:"Dow", url:"https://www.dow.com", industry:"Chemical", tags:["light-theme","corporate","hero-image","spacious","vibrant-accent","clean-minimal","modern-tech","photo-heavy"], source:"fortune100" },
+  { rank:69, name:"Progressive", url:"https://www.progressive.com", industry:"Insurance", tags:["light-theme","consumer","clean-minimal","vibrant-accent","hero-image","card-layout","contained"], source:"fortune100" },
+  { rank:70, name:"ConocoPhillips", url:"https://www.conocophillips.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","contained","clean-minimal"], source:"fortune100" },
+  { rank:71, name:"Tyson Foods", url:"https://www.tysonfoods.com", industry:"Food", tags:["light-theme","corporate","hero-image","photo-heavy","product-focused","spacious","clean-minimal","contained"], source:"fortune100" },
+  { rank:72, name:"Deere & Company", url:"https://www.deere.com", industry:"Industrial", tags:["dark-theme","bold-design","hero-image","product-focused","photo-heavy","full-bleed","modern-tech","animated","large-typography"], source:"fortune100" },
+  { rank:73, name:"Boeing", url:"https://www.boeing.com", industry:"Aerospace", tags:["dark-theme","corporate","hero-image","photo-heavy","spacious","bold-design","modern-tech","animated","editorial"], source:"fortune100" },
+  { rank:74, name:"Lowe's", url:"https://www.lowes.com", industry:"Retail", tags:["light-theme","consumer","dense","product-focused","card-layout","mega-menu","colorful","full-bleed"], source:"fortune100" },
+  { rank:75, name:"Abbott Laboratories", url:"https://www.abbott.com", industry:"Healthcare", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","people-focused","vibrant-accent","modern-tech"], source:"fortune100" },
+  { rank:76, name:"United Airlines", url:"https://www.united.com", industry:"Airlines", tags:["light-theme","consumer","hero-image","clean-minimal","spacious","photo-heavy","modern-tech","vibrant-accent"], source:"fortune100" },
+  { rank:77, name:"US Foods", url:"https://www.usfoods.com", industry:"Food Distribution", tags:["light-theme","corporate","hero-image","product-focused","photo-heavy","clean-minimal","contained","vibrant-accent"], source:"fortune100" },
+  { rank:78, name:"Sysco", url:"https://www.sysco.com", industry:"Food Distribution", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","clean-minimal","contained","vibrant-accent"], source:"fortune100" },
+  { rank:79, name:"Coca-Cola", url:"https://www.coca-colacompany.com", industry:"Food & Beverage", tags:["light-theme","editorial","hero-image","spacious","vibrant-accent","bold-design","people-focused","clean-minimal","colorful"], source:"fortune100" },
+  { rank:80, name:"StoneX Group", url:"https://www.stonex.com", industry:"Financial Services", tags:["dark-theme","corporate","modern-tech","hero-image","clean-minimal","gradient","spacious"], source:"fortune100" },
+  { rank:81, name:"Thermo Fisher Scientific", url:"https://www.thermofisher.com", industry:"Life Sciences", tags:["light-theme","corporate","hero-image","product-focused","clean-minimal","mega-menu","dense","contained"], source:"fortune100" },
+  { rank:82, name:"Northrop Grumman", url:"https://www.northropgrumman.com", industry:"Aerospace & Defense", tags:["dark-theme","corporate","hero-image","photo-heavy","bold-design","modern-tech","spacious","animated"], source:"fortune100" },
+  { rank:83, name:"General Dynamics", url:"https://www.gd.com", industry:"Aerospace & Defense", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","contained","clean-minimal"], source:"fortune100" },
+  { rank:84, name:"Allstate", url:"https://www.allstate.com", industry:"Insurance", tags:["light-theme","consumer","clean-minimal","vibrant-accent","hero-image","people-focused","contained"], source:"fortune100" },
+  { rank:85, name:"Publix", url:"https://www.publix.com", industry:"Retail", tags:["light-theme","consumer","clean-minimal","hero-image","people-focused","vibrant-accent","contained","card-layout"], source:"fortune100" },
+  { rank:86, name:"Bristol-Myers Squibb", url:"https://www.bms.com", industry:"Pharma", tags:["light-theme","corporate","hero-image","spacious","people-focused","vibrant-accent","clean-minimal","gradient","modern-tech"], source:"fortune100" },
+  { rank:87, name:"American Airlines", url:"https://www.aa.com", industry:"Airlines", tags:["light-theme","consumer","hero-image","clean-minimal","spacious","vibrant-accent","card-layout","modern-tech"], source:"fortune100" },
+  { rank:88, name:"Prudential Financial", url:"https://www.prudential.com", industry:"Financial Services", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","vibrant-accent","contained","serif"], source:"fortune100" },
+  { rank:89, name:"New York Life", url:"https://www.newyorklife.com", industry:"Insurance", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","people-focused","serif","contained"], source:"fortune100" },
+  { rank:90, name:"Albertsons", url:"https://www.albertsons.com", industry:"Retail", tags:["light-theme","consumer","hero-image","product-focused","clean-minimal","vibrant-accent","card-layout"], source:"fortune100" },
+  { rank:91, name:"TIAA", url:"https://www.tiaa.org", industry:"Financial Services", tags:["light-theme","corporate","spacious","hero-image","clean-minimal","vibrant-accent","people-focused","contained"], source:"fortune100" },
+  { rank:92, name:"Capital One", url:"https://www.capitalone.com", industry:"Financial Services", tags:["light-theme","consumer","clean-minimal","spacious","hero-image","modern-tech","vibrant-accent","card-layout"], source:"fortune100" },
+  { rank:93, name:"Nucor", url:"https://www.nucor.com", industry:"Steel", tags:["light-theme","corporate","hero-image","photo-heavy","spacious","contained","clean-minimal","bold-design"], source:"fortune100" },
+  { rank:94, name:"Enterprise Holdings", url:"https://www.enterpriseholdings.com", industry:"Automotive / Rental", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","people-focused","contained"], source:"fortune100" },
+  { rank:95, name:"Plains All American Pipeline", url:"https://www.plainsallamerican.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","contained","clean-minimal","sparse"], source:"fortune100" },
+  { rank:96, name:"AIG", url:"https://www.aig.com", industry:"Insurance", tags:["light-theme","corporate","hero-image","spacious","clean-minimal","vibrant-accent","contained","modern-tech"], source:"fortune100" },
+  { rank:97, name:"Broadcom", url:"https://www.broadcom.com", industry:"Technology", tags:["dark-theme","modern-tech","hero-image","clean-minimal","spacious","gradient","bold-design","animated"], source:"fortune100" },
+  { rank:98, name:"Energy Transfer", url:"https://www.energytransfer.com", industry:"Energy", tags:["light-theme","corporate","hero-image","photo-heavy","contained","clean-minimal"], source:"fortune100" },
+  { rank:99, name:"Liberty Mutual", url:"https://www.libertymutual.com", industry:"Insurance", tags:["light-theme","consumer","hero-image","clean-minimal","people-focused","vibrant-accent","card-layout"], source:"fortune100" },
+  { rank:100, name:"USAA", url:"https://www.usaa.com", industry:"Financial Services", tags:["light-theme","consumer","clean-minimal","hero-image","vibrant-accent","spacious","card-layout","contained"], source:"fortune100" }
+];
+
+// Tag metadata for analysis
+const tagMeta = {
+  "dark-theme":      { group:"Color & Theme",   label:"Dark theme" },
+  "light-theme":     { group:"Color & Theme",   label:"Light theme" },
+  "colorful":        { group:"Color & Theme",   label:"Colorful palette" },
+  "muted-tones":     { group:"Color & Theme",   label:"Muted tones" },
+  "vibrant-accent":  { group:"Color & Theme",   label:"Vibrant accent colors" },
+  "gradient":        { group:"Color & Theme",   label:"Gradients" },
+  "full-bleed":      { group:"Layout & Space",  label:"Full-bleed / edge-to-edge" },
+  "contained":       { group:"Layout & Space",  label:"Contained / boxed layout" },
+  "spacious":        { group:"Layout & Space",  label:"Generous whitespace" },
+  "dense":           { group:"Layout & Space",  label:"Dense / packed content" },
+  "sparse":          { group:"Layout & Space",  label:"Very sparse" },
+  "card-layout":     { group:"Layout & Space",  label:"Card-based layout" },
+  "large-typography":{ group:"Typography",       label:"Large / bold typography" },
+  "serif":           { group:"Typography",       label:"Serif typefaces" },
+  "geometric-sans":  { group:"Typography",       label:"Geometric sans-serif" },
+  "hero-image":      { group:"Imagery & Media", label:"Large hero image" },
+  "video-hero":      { group:"Imagery & Media", label:"Video hero" },
+  "photo-heavy":     { group:"Imagery & Media", label:"Photography-heavy" },
+  "illustration":    { group:"Imagery & Media", label:"Illustrations" },
+  "people-focused":  { group:"Imagery & Media", label:"People-focused imagery" },
+  "product-focused": { group:"Imagery & Media", label:"Product-focused imagery" },
+  "animated":        { group:"Interaction",      label:"Animations & motion" },
+  "minimal-nav":     { group:"Navigation",       label:"Minimal navigation" },
+  "mega-menu":       { group:"Navigation",       label:"Mega menu" },
+  "corporate":       { group:"Overall Feel",    label:"Corporate / formal" },
+  "modern-tech":     { group:"Overall Feel",    label:"Modern / tech aesthetic" },
+  "luxury-feel":     { group:"Overall Feel",    label:"Luxury / premium feel" },
+  "consumer":        { group:"Overall Feel",    label:"Consumer-friendly" },
+  "editorial":       { group:"Overall Feel",    label:"Editorial / magazine-like" },
+  "bold-design":     { group:"Overall Feel",    label:"Bold visual statements" },
+  "clean-minimal":   { group:"Overall Feel",    label:"Clean & minimal" }
+};
+
+// ══════════════════════════════════════════════
+//  PROFILE (persisted to file)
+// ══════════════════════════════════════════════
+const STORAGE_KEY = "designRater_v2";
+let profile = {
+  version: 2,
+  ratings: {},        // { siteName: score }
+  skipped: [],
+  customSites: [],    // { name, url, industry, tags, source:"custom" }
+  sessions: [],       // { date, type, count }
+  updatedAt: null
+};
+
+// Session state (not persisted to file)
+let session = {
+  mode: null,         // "fortune100" or "custom"
+  queue: [],          // sites to rate in this session
+  queueIndex: 0,
+  selectedRating: null,
+  selectedTags: [],
+  fortuneOrder: [],   // shuffled indices for fortune100
+  fortuneCurrent: 0,
+};
+
+function saveToLocalStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  // Also save session state for resume
+  localStorage.setItem(STORAGE_KEY + "_session", JSON.stringify({
+    fortuneOrder: session.fortuneOrder,
+    fortuneCurrent: session.fortuneCurrent
+  }));
+}
+
+function loadFromLocalStorage() {
+  try {
+    // Try v2 first
+    let p = localStorage.getItem(STORAGE_KEY);
+    if (p) {
+      const parsed = JSON.parse(p);
+      if (parsed.version === 2) Object.assign(profile, parsed);
+    }
+
+    // Migrate from v1 if v2 has no ratings
+    if (Object.keys(profile.ratings).length === 0) {
+      const v1 = localStorage.getItem("designRater_v1");
+      if (v1) {
+        const parsed = JSON.parse(v1);
+        if (parsed.ratings) {
+          profile.ratings = parsed.ratings;
+          profile.skipped = parsed.skipped || [];
+          profile.sessions.push({ date: new Date().toISOString(), type: "fortune100", count: Object.keys(parsed.ratings).length });
+          // Persist migrated data as v2
+          saveToLocalStorage();
+        }
+        // Also recover session order from v1
+        if (parsed.order) {
+          session.fortuneOrder = parsed.order;
+          session.fortuneCurrent = parsed.current || 0;
+        }
+      }
+    }
+
+    const s = localStorage.getItem(STORAGE_KEY + "_session");
+    if (s) {
+      const parsed = JSON.parse(s);
+      session.fortuneOrder = parsed.fortuneOrder || [];
+      session.fortuneCurrent = parsed.fortuneCurrent || 0;
+    }
+  } catch {}
+}
+
+// ══════════════════════════════════════════════
+//  FILE SAVE / LOAD
+// ══════════════════════════════════════════════
+let fileHandle = null;
+
+async function saveProfileToFile() {
+  profile.updatedAt = new Date().toISOString();
+  const json = JSON.stringify(profile, null, 2);
+  saveToLocalStorage();
+
+  // Try File System Access API first
+  if (window.showSaveFilePicker && fileHandle) {
+    try {
+      const writable = await fileHandle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      showSaveBanner(`Profile saved to ${fileHandle.name}`);
+      return;
+    } catch {}
+  }
+
+  if (window.showSaveFilePicker) {
+    try {
+      fileHandle = await window.showSaveFilePicker({
+        suggestedName: "design-preferences.json",
+        types: [{ description: "JSON", accept: { "application/json": [".json"] } }]
+      });
+      const writable = await fileHandle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      showSaveBanner(`Profile saved to ${fileHandle.name}`);
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+
+  // Fallback: download
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "design-preferences.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  showSaveBanner("Profile downloaded as design-preferences.json");
+}
+
+function loadProfileFromFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      mergeProfile(data);
+      saveToLocalStorage();
+      refreshWelcomeScreen();
+    } catch (err) {
+      alert("Invalid JSON file: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function mergeProfile(data) {
+  // Merge ratings (incoming overwrites existing)
+  if (data.ratings) {
+    Object.assign(profile.ratings, data.ratings);
+  }
+  // Merge skipped (union)
+  if (data.skipped) {
+    const skipSet = new Set([...profile.skipped, ...data.skipped]);
+    profile.skipped = [...skipSet];
+  }
+  // Merge custom sites (by name, incoming overwrites)
+  if (data.customSites) {
+    const existing = new Map(profile.customSites.map(s => [s.name, s]));
+    for (const site of data.customSites) {
+      existing.set(site.name, site);
+    }
+    profile.customSites = [...existing.values()];
+  }
+  // Merge sessions
+  if (data.sessions) {
+    profile.sessions = [...(profile.sessions || []), ...data.sessions];
+  }
+  profile.version = 2;
+}
+
+function showSaveBanner(msg) {
+  const existing = document.querySelector('.save-banner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.className = 'save-banner';
+  banner.textContent = msg;
+  const container = document.querySelector('.screen.active .results-container, .screen.active .hero');
+  if (container) container.prepend(banner);
+  setTimeout(() => banner.remove(), 3000);
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getAllSites() {
+  // All known sites: fortune100 + custom
+  const byName = new Map();
+  for (const s of fortune100) byName.set(s.name, s);
+  for (const s of profile.customSites) byName.set(s.name, s);
+  return [...byName.values()];
+}
+
+function getSiteByName(name) {
+  const f = fortune100.find(s => s.name === name);
+  if (f) return f;
+  return profile.customSites.find(s => s.name === name);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function init() {
+  loadFromLocalStorage();
+  buildRatingButtons();
+  buildTagSelector();
+  setupDropZone();
+  refreshWelcomeScreen();
+  document.addEventListener("keydown", handleKeyboard);
+}
+
+function refreshWelcomeScreen() {
+  const ratedCount = Object.keys(profile.ratings).length;
+  const customCount = profile.customSites.length;
+  const sessionCount = (profile.sessions || []).length;
+
+  // Profile info
+  const profileInfo = document.getElementById("profileInfo");
+  if (ratedCount > 0) {
+    profileInfo.style.display = "block";
+    profileInfo.innerHTML = `<strong>Current Profile</strong>` +
+      `${ratedCount} sites rated` +
+      (customCount > 0 ? ` · ${customCount} custom sites` : '') +
+      (sessionCount > 0 ? ` · ${sessionCount} sessions` : '') +
+      (profile.updatedAt ? ` · Last updated ${new Date(profile.updatedAt).toLocaleDateString()}` : '');
+  } else {
+    profileInfo.style.display = "none";
+  }
+
+  // Resume info
+  const resumeInfo = document.getElementById("resumeInfo");
+  const resumeBtn = document.getElementById("resumeBtn");
+  const f100Rated = fortune100.filter(c => profile.ratings[c.name] !== undefined || profile.skipped.includes(c.name)).length;
+  if (f100Rated > 0 && f100Rated < 100 && session.fortuneOrder.length > 0) {
+    resumeInfo.style.display = "block";
+    resumeInfo.textContent = `Fortune 100 progress: ${f100Rated} / 100 done, ${100 - f100Rated} remaining.`;
+    resumeBtn.style.display = "inline-flex";
+  } else {
+    resumeInfo.style.display = "none";
+    resumeBtn.style.display = "none";
+  }
+
+  // View results / reset buttons
+  document.getElementById("viewResultsBtn").style.display = ratedCount > 0 ? "inline-flex" : "none";
+  document.getElementById("resetBtn").style.display = ratedCount > 0 ? "inline-flex" : "none";
+}
+
+function buildRatingButtons() {
+  const container = document.getElementById("ratingButtons");
+  container.innerHTML = '';
+  for (let i = 0; i <= 10; i++) {
+    const btn = document.createElement("button");
+    btn.className = "rate-btn";
+    btn.textContent = i;
+    btn.dataset.value = i;
+    btn.addEventListener("click", () => selectRating(i));
+    container.appendChild(btn);
+  }
+}
+
+function buildTagSelector() {
+  const container = document.getElementById("tagGroups");
+  const groups = {};
+  for (const [tag, meta] of Object.entries(tagMeta)) {
+    if (!groups[meta.group]) groups[meta.group] = [];
+    groups[meta.group].push({ tag, label: meta.label });
+  }
+  for (const [group, tags] of Object.entries(groups)) {
+    const div = document.createElement("div");
+    div.className = "tag-group";
+    div.innerHTML = `<div class="tag-group-label">${group}</div><div class="tag-chips">` +
+      tags.map(t => `<span class="tag-chip" data-tag="${t.tag}" onclick="toggleTag(this)">${t.label}</span>`).join('') +
+      `</div>`;
+    container.appendChild(div);
+  }
+}
+
+function setupDropZone() {
+  const zone = document.getElementById("dropZone");
+  const input = document.getElementById("fileInput");
+
+  zone.addEventListener("click", () => input.click());
+  input.addEventListener("change", (e) => {
+    if (e.target.files[0]) loadProfileFromFile(e.target.files[0]);
+  });
+  zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.classList.add("dragover"); });
+  zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+  zone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    zone.classList.remove("dragover");
+    if (e.dataTransfer.files[0]) loadProfileFromFile(e.dataTransfer.files[0]);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// ══════════════════════════════════════════════
+//  START RATING — FORTUNE 100
+// ══════════════════════════════════════════════
+function startFortune100(resume) {
+  session.mode = "fortune100";
+
+  if (resume && session.fortuneOrder.length > 0) {
+    // Resume existing order
+  } else {
+    session.fortuneOrder = shuffle([...Array(fortune100.length).keys()]);
+    session.fortuneCurrent = 0;
+  }
+
+  // Build queue: fortune100 sites not yet rated/skipped
+  session.queue = [];
+  for (let i = session.fortuneCurrent; i < session.fortuneOrder.length; i++) {
+    const co = fortune100[session.fortuneOrder[i]];
+    if (profile.ratings[co.name] === undefined && !profile.skipped.includes(co.name)) {
+      session.queue.push(co);
+    }
+  }
+  session.queueIndex = 0;
+
+  if (session.queue.length === 0) {
+    alert("You've already rated all Fortune 100 sites! Add custom sites to keep refining.");
+    return;
+  }
+
+  document.getElementById("batchLabel").textContent = "Fortune 100";
+  document.getElementById("tagSelector").classList.remove("visible");
+  showScreen("rating");
+  showCurrentSite();
+}
+
+// ══════════════════════════════════════════════
+//  START RATING — CUSTOM BATCH
+// ══════════════════════════════════════════════
+function startCustomBatch() {
+  const input = document.getElementById("urlInput").value.trim();
+  if (!input) { alert("Please enter at least one URL."); return; }
+
+  const lines = input.split("\n").map(l => l.trim()).filter(Boolean);
+  const sites = [];
+
+  for (const line of lines) {
+    const parts = line.split("|").map(p => p.trim());
+    let name, url, industry;
+
+    if (parts.length >= 3) {
+      [name, url, industry] = parts;
+    } else if (parts.length === 2) {
+      [name, url] = parts;
+      industry = "Custom";
+    } else {
+      url = parts[0];
+      try {
+        name = new URL(url.startsWith("http") ? url : "https://" + url).hostname.replace("www.", "");
+      } catch {
+        name = url;
+      }
+      industry = "Custom";
+    }
+
+    if (!url.startsWith("http")) url = "https://" + url;
+
+    // Deduplicate by name
+    if (!sites.find(s => s.name === name)) {
+      const site = { name, url, industry, tags: [], source: "custom" };
+      sites.push(site);
+
+      // Add to profile.customSites if not already there
+      if (!profile.customSites.find(s => s.name === name)) {
+        profile.customSites.push(site);
+      }
+    }
+  }
+
+  if (sites.length === 0) { alert("No valid URLs found."); return; }
+
+  session.mode = "custom";
+  session.queue = sites.filter(s => profile.ratings[s.name] === undefined);
+  session.queueIndex = 0;
+
+  if (session.queue.length === 0) {
+    alert("All these sites have already been rated!");
+    return;
+  }
+
+  document.getElementById("batchLabel").textContent = `Custom · ${sites.length} sites`;
+  showScreen("rating");
+  showCurrentSite();
+}
+
+// ══════════════════════════════════════════════
+//  RATING FLOW
+// ══════════════════════════════════════════════
+function showCurrentSite() {
+  if (session.queueIndex >= session.queue.length) {
+    // Session done
+    const count = session.queue.filter(s => profile.ratings[s.name] !== undefined).length;
+    profile.sessions.push({
+      date: new Date().toISOString(),
+      type: session.mode,
+      count
+    });
+    saveToLocalStorage();
+    showResults();
+    return;
+  }
+
+  const site = session.queue[session.queueIndex];
+
+  // Skip already-rated (in case of resume)
+  if (profile.ratings[site.name] !== undefined) {
+    session.queueIndex++;
+    showCurrentSite();
+    return;
+  }
+
+  // Progress
+  const done = session.queueIndex;
+  const total = session.queue.length;
+  document.getElementById("progressFill").style.width = `${(done / total) * 100}%`;
+  document.getElementById("progressText").textContent = `${done} / ${total}`;
+
+  // Site info
+  if (site.rank) {
+    document.getElementById("companyRank").textContent = `Fortune #${site.rank} · ${site.industry}`;
+  } else {
+    document.getElementById("companyRank").textContent = site.industry || "Custom site";
+  }
+  document.getElementById("companyName").textContent = site.name;
+  document.getElementById("companyUrl").textContent = site.url.replace("https://", "");
+
+  // Show tag selector for custom sites
+  const tagSel = document.getElementById("tagSelector");
+  if (site.source === "custom") {
+    tagSel.classList.add("visible");
+    // Reset tag selection
+    session.selectedTags = [];
+    document.querySelectorAll(".tag-chip").forEach(c => c.classList.remove("selected"));
+  } else {
+    tagSel.classList.remove("visible");
+  }
+
+  session.selectedRating = null;
+  updateRatingUI();
+}
+
+function openCurrentSite() {
+  const site = session.queue[session.queueIndex];
+  if (site) {
+    const w = window.open(site.url, "designPreview");
+    if (w) w.focus();
+  }
+}
+
+function selectRating(value) {
+  session.selectedRating = value;
+  updateRatingUI();
+}
+
+function updateRatingUI() {
+  document.querySelectorAll(".rate-btn").forEach(btn => {
+    btn.classList.toggle("selected", parseInt(btn.dataset.value) === session.selectedRating);
+  });
+  const confirmBtn = document.getElementById("confirmBtn");
+  confirmBtn.classList.toggle("enabled", session.selectedRating !== null);
+}
+
+function toggleTag(el) {
+  const tag = el.dataset.tag;
+  el.classList.toggle("selected");
+  if (el.classList.contains("selected")) {
+    session.selectedTags.push(tag);
+  } else {
+    session.selectedTags = session.selectedTags.filter(t => t !== tag);
+  }
+}
+
+function confirmRating() {
+  if (session.selectedRating === null) return;
+  const site = session.queue[session.queueIndex];
+
+  // Save rating
+  profile.ratings[site.name] = session.selectedRating;
+
+  // Save tags for custom sites
+  if (site.source === "custom" && session.selectedTags.length > 0) {
+    const customSite = profile.customSites.find(s => s.name === site.name);
+    if (customSite) customSite.tags = [...session.selectedTags];
+    site.tags = [...session.selectedTags];
+  }
+
+  // Advance fortune100 cursor
+  if (session.mode === "fortune100") {
+    session.fortuneCurrent++;
+  }
+
+  session.queueIndex++;
+  saveToLocalStorage();
+  showCurrentSite();
+}
+
+function skipCurrent() {
+  const site = session.queue[session.queueIndex];
+  if (!profile.skipped.includes(site.name)) {
+    profile.skipped.push(site.name);
+  }
+  if (session.mode === "fortune100") {
+    session.fortuneCurrent++;
+  }
+  session.queueIndex++;
+  saveToLocalStorage();
+  showCurrentSite();
+}
+
+function finishEarly() {
+  const rated = Object.keys(profile.ratings).length;
+  if (rated < 5) {
+    alert(`You've only rated ${rated} sites total. Rate at least 5 for a meaningful analysis.`);
+    return;
+  }
+  // Record session
+  const count = session.queue.slice(0, session.queueIndex).filter(s => profile.ratings[s.name] !== undefined).length;
+  if (count > 0) {
+    profile.sessions.push({
+      date: new Date().toISOString(),
+      type: session.mode,
+      count
+    });
+  }
+  saveToLocalStorage();
+  showResults();
+}
+
+function handleKeyboard(e) {
+  if (!document.getElementById("rating").classList.contains("active")) return;
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+  if (e.key === "Enter") { e.preventDefault(); confirmRating(); }
+  else if (e.key.toLowerCase() === "s") { e.preventDefault(); skipCurrent(); }
+  else if (e.key.toLowerCase() === "o") { e.preventDefault(); openCurrentSite(); }
+  else if (e.key >= "0" && e.key <= "9") {
+    e.preventDefault();
+    selectRating(e.shiftKey && e.key === "0" ? 10 : parseInt(e.key));
+  }
+}
+
+function resetAll() {
+  if (confirm("This will erase ALL ratings and custom sites. Are you sure?")) {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY + "_session");
+    fileHandle = null;
+    location.reload();
+  }
+}
+
+// ══════════════════════════════════════════════
+//  ANALYSIS & RESULTS
+// ══════════════════════════════════════════════
+function showResults() {
+  showScreen("results");
+  const container = document.getElementById("resultsContainer");
+  const allSites = getAllSites();
+  const ratedSites = allSites.filter(s => profile.ratings[s.name] !== undefined);
+  const count = ratedSites.length;
+
+  if (count === 0) {
+    container.innerHTML = `<div class="results-header"><h1>No Ratings Yet</h1><p>Go back and rate some websites first.</p></div>`;
+    return;
+  }
+
+  const scores = ratedSites.map(s => profile.ratings[s.name]);
+  const avg = (scores.reduce((a, b) => a + b, 0) / count).toFixed(1);
+  const sorted = [...ratedSites].sort((a, b) => profile.ratings[b.name] - profile.ratings[a.name]);
+  const topSites = sorted.slice(0, 6);
+  const bottomSites = sorted.slice(-6).reverse();
+  const customCount = ratedSites.filter(s => s.source === "custom").length;
+  const fortuneCount = ratedSites.filter(s => s.source === "fortune100").length;
+
+  // Tag analysis
+  const tagScores = {};
+  const tagCounts = {};
+  for (const site of ratedSites) {
+    const score = profile.ratings[site.name];
+    for (const tag of (site.tags || [])) {
+      if (!tagScores[tag]) { tagScores[tag] = 0; tagCounts[tag] = 0; }
+      tagScores[tag] += score;
+      tagCounts[tag]++;
+    }
+  }
+  const tagAvgs = {};
+  for (const tag in tagScores) {
+    if (tagCounts[tag] >= 3) tagAvgs[tag] = tagScores[tag] / tagCounts[tag];
+  }
+
+  const sortedTags = Object.entries(tagAvgs).sort((a, b) => b[1] - a[1]);
+  const avgNum = parseFloat(avg);
+  const lovedTags = sortedTags.filter(([_, s]) => s >= avgNum + 0.5).slice(0, 12);
+  const dislikedTags = sortedTags.filter(([_, s]) => s < avgNum - 0.5).reverse().slice(0, 12);
+
+  const groupedPrefs = {};
+  for (const [tag, score] of sortedTags) {
+    const meta = tagMeta[tag];
+    if (!meta) continue;
+    if (!groupedPrefs[meta.group]) groupedPrefs[meta.group] = [];
+    groupedPrefs[meta.group].push({ tag, label: meta.label, score, count: tagCounts[tag] });
+  }
+
+  const dna = generateDesignDNA(tagAvgs, avgNum, lovedTags, dislikedTags, topSites);
+
+  // Build HTML
+  let html = `
+    <div class="results-header">
+      <h1>Your Design Preference Profile</h1>
+      <p>Based on ${count} website ratings (${fortuneCount} Fortune 100${customCount > 0 ? `, ${customCount} custom` : ''})</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-value">${count}</div><div class="stat-label">Sites Rated</div></div>
+      <div class="stat-card"><div class="stat-value">${avg}</div><div class="stat-label">Avg Rating</div></div>
+      <div class="stat-card"><div class="stat-value">${customCount}</div><div class="stat-label">Custom Sites</div></div>
+      <div class="stat-card"><div class="stat-value">${(profile.sessions || []).length}</div><div class="stat-label">Sessions</div></div>
+    </div>
+
+    <div class="results-section">
+      <h2>Highest Rated</h2>
+      <div class="top-sites">
+        ${topSites.map(s => `<div class="site-pill"><span>${s.name}${s.source === 'custom' ? '<span class="source-badge">custom</span>' : ''}</span><span class="score high">${profile.ratings[s.name]}</span></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="results-section">
+      <h2>Lowest Rated</h2>
+      <div class="bottom-sites">
+        ${bottomSites.map(s => `<div class="site-pill"><span>${s.name}${s.source === 'custom' ? '<span class="source-badge">custom</span>' : ''}</span><span class="score low">${profile.ratings[s.name]}</span></div>`).join("")}
+      </div>
+    </div>
+  `;
+
+  for (const [group, prefs] of Object.entries(groupedPrefs)) {
+    html += `<div class="results-section"><h2>${group} <span class="badge">preference scores</span></h2>`;
+    for (const p of prefs) {
+      const pct = (p.score / 10) * 100;
+      const color = p.score >= avgNum + 0.5 ? "#16a34a" : p.score <= avgNum - 0.5 ? "#dc2626" : "#2563eb";
+      html += `
+        <div class="pref-row">
+          <div class="pref-label">${p.label} <span style="color:var(--text-tertiary);font-size:0.75rem">(${p.count})</span></div>
+          <div class="pref-bar-track"><div class="pref-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          <div class="pref-score" style="color:${color}">${p.score.toFixed(1)}</div>
+        </div>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `
+    <div class="results-section">
+      <h2>Your Design DNA</h2>
+      <div class="dna-box">${dna}</div>
+    </div>
+
+    <div class="results-section">
+      <h2>Exportable Preference Prompt</h2>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.75rem">
+        Copy this into any AI tool to generate designs matching your preferences.
+      </p>
+      <textarea class="export-area" id="exportPrompt" readonly>${generatePrompt(tagAvgs, avgNum, lovedTags, dislikedTags)}</textarea>
+      <div class="export-buttons">
+        <button class="btn btn-secondary btn-sm" onclick="copyExport('exportPrompt')">Copy to Clipboard</button>
+      </div>
+    </div>
+  `;
+
+  // Session history
+  if (profile.sessions && profile.sessions.length > 0) {
+    html += `<div class="results-section"><h2>Session History</h2><ul class="session-list">`;
+    for (const s of [...profile.sessions].reverse().slice(0, 10)) {
+      const d = new Date(s.date).toLocaleDateString();
+      html += `<li>${d} — ${s.type} batch, ${s.count} sites rated</li>`;
+    }
+    html += `</ul></div>`;
+  }
+
+  html += `
+    <div class="results-actions">
+      <button class="btn btn-success" onclick="saveProfileToFile()">Save Profile to File</button>
+      <button class="btn btn-secondary" onclick="showScreen('addSites')">Add More Sites</button>
+      <button class="btn btn-secondary" onclick="showScreen('welcome')">Back to Start</button>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+function generateDesignDNA(tagAvgs, avg, loved, disliked, topSites) {
+  const lines = [];
+
+  const darkScore = tagAvgs["dark-theme"] || avg;
+  const lightScore = tagAvgs["light-theme"] || avg;
+  if (darkScore > lightScore + 0.8)
+    lines.push("You have a strong preference for dark-themed designs with deeper, moodier color palettes.");
+  else if (lightScore > darkScore + 0.8)
+    lines.push("You gravitate toward light, airy designs with bright backgrounds and open feel.");
+  else
+    lines.push("You're comfortable with both dark and light themes — execution matters more than mode.");
+
+  const spacious = tagAvgs["spacious"] || avg;
+  const dense = tagAvgs["dense"] || avg;
+  if (spacious > dense + 0.8)
+    lines.push("Generous whitespace and breathing room are important to you — you prefer spacious layouts.");
+  else if (dense > spacious + 0.8)
+    lines.push("You appreciate content-rich, dense layouts that pack a lot of information on screen.");
+
+  const styles = [
+    ["modern tech aesthetic", tagAvgs["modern-tech"] || avg],
+    ["corporate/formal style", tagAvgs["corporate"] || avg],
+    ["editorial/magazine approach", tagAvgs["editorial"] || avg],
+    ["consumer-friendly design", tagAvgs["consumer"] || avg],
+    ["luxury/premium feel", tagAvgs["luxury-feel"] || avg]
+  ].sort((a, b) => b[1] - a[1]);
+  if (styles[0][1] > avg + 0.3)
+    lines.push(`Your favorite design style is the ${styles[0][0]} (avg ${styles[0][1].toFixed(1)}).`);
+
+  if (tagAvgs["large-typography"] && tagAvgs["large-typography"] > avg + 0.5)
+    lines.push("You love bold, large typography that makes strong visual statements.");
+  if (tagAvgs["serif"] && tagAvgs["serif"] > avg + 0.5)
+    lines.push("Serif typefaces appeal to you — you appreciate classic typographic elegance.");
+
+  const people = tagAvgs["people-focused"] || avg;
+  const product = tagAvgs["product-focused"] || avg;
+  if (product > people + 0.5)
+    lines.push("Product-focused imagery resonates more with you than people-centric photography.");
+  else if (people > product + 0.5)
+    lines.push("You prefer designs featuring people — human-centric imagery connects with you.");
+
+  if (tagAvgs["animated"] && tagAvgs["animated"] > avg + 0.5)
+    lines.push("Motion and animation enhance a design in your eyes — you appreciate interactive, dynamic sites.");
+
+  const bold = tagAvgs["bold-design"] || avg;
+  const clean = tagAvgs["clean-minimal"] || avg;
+  if (bold > clean + 0.5)
+    lines.push("You're drawn to bold, striking designs that push boundaries over safe, minimal ones.");
+  else if (clean > bold + 0.5)
+    lines.push("Clean, minimal design wins for you — simplicity and clarity above everything.");
+
+  if (topSites.length >= 3) {
+    const topNames = topSites.slice(0, 3).map(c => c.name);
+    lines.push(`\nYour top-rated sites — ${topNames.join(", ")} — define the benchmark for your taste.`);
+  }
+
+  return lines.join("\n\n");
+}
+
+function generatePrompt(tagAvgs, avg, loved, disliked) {
+  const totalRated = Object.keys(profile.ratings).length;
+  const customCount = profile.customSites.filter(s => profile.ratings[s.name] !== undefined).length;
+
+  let prompt = `DESIGN PREFERENCE PROFILE\n`;
+  prompt += `========================\n\n`;
+  prompt += `Derived from rating ${totalRated} websites`;
+  if (customCount > 0) prompt += ` (including ${customCount} custom sites)`;
+  prompt += `.\nUse this profile to guide all web design decisions.\n\n`;
+
+  prompt += `STRONGLY PREFER (scored well above average ${avg.toFixed(1)}):\n`;
+  for (const [tag] of loved) {
+    const meta = tagMeta[tag];
+    if (meta) prompt += `  - ${meta.label} (${tagAvgs[tag].toFixed(1)}/10, n=${Math.round(tagAvgs[tag])})\n`;
+  }
+
+  prompt += `\nAVOID OR DE-EMPHASIZE (scored below average):\n`;
+  for (const [tag] of disliked) {
+    const meta = tagMeta[tag];
+    if (meta) prompt += `  - ${meta.label} (${tagAvgs[tag].toFixed(1)}/10)\n`;
+  }
+
+  prompt += `\nSPECIFIC GUIDANCE:\n`;
+  const dark = tagAvgs["dark-theme"] || avg;
+  const light = tagAvgs["light-theme"] || avg;
+  prompt += `  - Theme: ${dark > light + 0.5 ? "Prefer dark themes" : light > dark + 0.5 ? "Prefer light themes" : "Either dark or light is fine"}\n`;
+
+  const spacious = tagAvgs["spacious"] || avg;
+  const dense = tagAvgs["dense"] || avg;
+  prompt += `  - Density: ${spacious > dense + 0.5 ? "Generous whitespace, spacious layouts" : dense > spacious + 0.5 ? "Content-dense, efficient use of space" : "Moderate density"}\n`;
+
+  const bold = tagAvgs["bold-design"] || avg;
+  const clean = tagAvgs["clean-minimal"] || avg;
+  prompt += `  - Style: ${bold > clean + 0.5 ? "Bold, striking visual statements" : clean > bold + 0.5 ? "Clean, minimal, understated" : "Balance of boldness and restraint"}\n`;
+
+  if (tagAvgs["animated"] && tagAvgs["animated"] > avg + 0.3)
+    prompt += `  - Animation: Include subtle animations and transitions\n`;
+  if (tagAvgs["serif"] && tagAvgs["serif"] > avg + 0.3)
+    prompt += `  - Typography: Consider serif typefaces for headings\n`;
+  if (tagAvgs["large-typography"] && tagAvgs["large-typography"] > avg + 0.3)
+    prompt += `  - Typography: Use large, bold type for impact\n`;
+  if (tagAvgs["gradient"] && tagAvgs["gradient"] > avg + 0.3)
+    prompt += `  - Effects: Incorporate subtle gradients\n`;
+
+  prompt += `\nTOP RATED SITES (use as design references):\n`;
+  const allSites = getAllSites();
+  const topRated = allSites
+    .filter(s => profile.ratings[s.name] !== undefined)
+    .sort((a, b) => profile.ratings[b.name] - profile.ratings[a.name])
+    .slice(0, 5);
+  for (const s of topRated) {
+    prompt += `  - ${s.name} (${s.url}) — rated ${profile.ratings[s.name]}/10\n`;
+  }
+
+  return prompt;
+}
+
+function copyExport(id) {
+  const textarea = document.getElementById(id);
+  textarea.select();
+  document.execCommand("copy");
+  const btn = textarea.nextElementSibling.querySelector("button");
+  const orig = btn.textContent;
+  btn.textContent = "Copied!";
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+// ══════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
