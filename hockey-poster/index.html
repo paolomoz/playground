@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 Hockey Sticks — Olympic Final Edition | Engineered AEM Growth</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 Hockey Sticks — Olympic Final Edition | Engineered AEM Growth" />
+  <meta property="og:description" content="Canada vs USA — ExCat hits 292 users, Digital Insights surges to 425 reports — Feb 22, 2026" />
+  <meta property="og:image" content="assets/og-thumbnail.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Hockey stick growth charts: Experience Modernization Agent and Digital Insights surge in early 2026" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Adobe AEM Experience Modernization Team" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="2026 Hockey Sticks — Olympic Final Edition" />
+  <meta name="twitter:description" content="ExCat & Digital Insights both hit explosive growth in early 2026. Canada vs USA. Feb 22, 2026." />
+  <meta name="twitter:image" content="assets/og-thumbnail.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════
+       TOKENS
+       ═══════════════════════════════════════ */
+    :root {
+      --paper: #F4F1EA;
+      --paper-warm: #ECE8DF;
+      --ink: #1C1916;
+      --ink-mid: #4A4540;
+      --ink-light: #7A756E;
+      --rule: #C8C2B8;
+      --rule-light: #DDD8D0;
+
+      --canada: #C41E2A;
+      --canada-deep: #8B1520;
+      --canada-tint: rgba(196, 30, 42, 0.08);
+
+      --usa-navy: #0B2044;
+      --usa-blue: #1E3A6E;
+      --usa-tint: rgba(11, 32, 68, 0.08);
+
+      --gold: #B8962E;
+      --gold-soft: #D4B85A;
+
+      --arena: #080C14;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+      --pad: clamp(1.25rem, 4vw, 4rem);
+    }
+
+    /* ═══════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Adobe Clean', 'Source Sans 3', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    /* ═══════════════════════════════════════
+       POSTER CONTAINER — full width
+       ═══════════════════════════════════════ */
+    .poster {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    /* ═══════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════ */
+    .hero {
+      position: relative;
+      padding: clamp(3rem, 8vw, 7rem) var(--pad);
+      background:
+        linear-gradient(180deg,
+          rgba(8,12,20,0.25) 0%,
+          rgba(8,12,20,0.55) 45%,
+          rgba(8,12,20,0.88) 100%),
+        url('assets/hero-banner.png') center / cover no-repeat;
+      background-color: var(--arena);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-pre {
+      font-weight: 700;
+      font-size: clamp(0.7rem, 1.4vw, 1.1rem);
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.95);
+      text-transform: uppercase;
+    }
+
+    .hero-rule {
+      display: block;
+      width: min(60%, 340px);
+      height: 2px;
+      margin: 0.75rem auto;
+      border: none;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+
+    .hero-title {
+      font-weight: 800;
+      font-size: clamp(1.8rem, 5vw, 4.5rem);
+      line-height: 1.05;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero-stamp {
+      display: inline-block;
+      margin: 1.2rem 0 1rem;
+      padding: 0.35em 1.4em;
+      border: 2px solid #E8C84A;
+      background: rgba(184,150,46,0.15);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(0.7rem, 1.4vw, 1rem);
+      color: #F0D86A;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .hero-matchup {
+      font-weight: 800;
+      font-size: clamp(1.3rem, 3.2vw, 2.6rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+    }
+    .hero-matchup .t-canada { color: #F45B5B; }
+    .hero-matchup .t-vs {
+      color: rgba(255,255,255,0.4);
+      font-weight: 400;
+      font-size: 0.7em;
+      margin: 0 0.4em;
+    }
+    .hero-matchup .t-usa { color: #8BAED4; }
+
+    .hero-venue {
+      margin-top: 0.8rem;
+      font-weight: 700;
+      font-size: clamp(0.78rem, 1.5vw, 1rem);
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════
+       TEAM STRIPE
+       ═══════════════════════════════════════ */
+    .team-stripe {
+      display: flex;
+      height: 5px;
+    }
+    .team-stripe span { flex: 1; }
+    .team-stripe .ts-canada { background: var(--canada); }
+    .team-stripe .ts-usa { background: var(--usa-navy); }
+
+    /* ═══════════════════════════════════════
+       MATCHUP SECTION
+       ═══════════════════════════════════════ */
+    .matchup {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: clamp(2rem, 4vw, 3.5rem) var(--pad) 0;
+    }
+
+    .team-col { position: relative; }
+    .team-col--canada {
+      padding-right: clamp(1rem, 3vw, 3rem);
+      border-right: 1px solid var(--rule);
+    }
+    .team-col--usa {
+      padding-left: clamp(1rem, 3vw, 3rem);
+    }
+
+    .team-header {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .team-badge {
+      width: clamp(40px, 6vw, 56px);
+      height: clamp(40px, 6vw, 56px);
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .team-badge--canada { border: 2px solid var(--canada); }
+    .team-badge--usa { border: 2px solid var(--usa-navy); }
+    .team-badge[data-failed] { display: none; }
+
+    .team-name {
+      font-weight: 700;
+      font-size: clamp(0.6rem, 1.1vw, 0.78rem);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .team-name--canada { color: var(--canada); }
+    .team-name--usa { color: var(--usa-navy); }
+
+    .stat-big {
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .stat-big--canada { color: var(--canada); }
+    .stat-big--usa { color: var(--usa-navy); }
+
+    .stat-label {
+      font-weight: 500;
+      font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      margin-top: 0.15rem;
+    }
+
+    .stat-sub {
+      display: inline-block;
+      margin-top: 0.6rem;
+      padding: 0.25em 0.7em;
+      font-weight: 600;
+      font-size: clamp(0.62rem, 1vw, 0.72rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+    }
+    .stat-sub--canada {
+      background: var(--canada-tint);
+      color: var(--canada-deep);
+    }
+    .stat-sub--usa {
+      background: var(--usa-tint);
+      color: var(--usa-navy);
+    }
+
+    /* ═══════════════════════════════════════
+       CHARTS
+       ═══════════════════════════════════════ */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 1.5rem var(--pad) clamp(1.5rem, 3vw, 3rem);
+    }
+
+    .chart-col { position: relative; }
+    .chart-col--canada {
+      padding-right: clamp(1rem, 3vw, 3rem);
+      border-right: 1px solid var(--rule);
+    }
+    .chart-col--usa {
+      padding-left: clamp(1rem, 3vw, 3rem);
+    }
+
+    .chart-title {
+      font-weight: 800;
+      font-size: clamp(0.72rem, 1.3vw, 1rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+    .chart-title--canada { border-left: 3px solid var(--canada); padding-left: 0.5rem; }
+    .chart-title--usa { border-left: 3px solid var(--usa-navy); padding-left: 0.5rem; }
+
+    .chart-svg { width: 100%; height: auto; }
+
+    .grid-line { stroke: var(--rule-light); stroke-width: 0.5; }
+    .axis-label {
+      font-family: 'Adobe Clean', 'Source Sans 3', 'Source Sans Pro', sans-serif;
+      font-size: 8px;
+      fill: var(--ink-light);
+    }
+    .month-label {
+      font-family: 'Adobe Clean', 'Source Sans 3', 'Source Sans Pro', sans-serif;
+      font-size: 8.5px;
+      fill: var(--ink-light);
+      text-anchor: middle;
+    }
+
+    .chart-data {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 2.2s var(--ease-out);
+      transition-delay: 1s;
+    }
+    body.revealed .chart-data { clip-path: inset(0 0% 0 0); }
+
+    .area-canada { fill: var(--canada); opacity: 0.12; }
+    .line-canada { fill: none; stroke: var(--canada); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .dot-canada { fill: var(--canada); stroke: var(--paper); stroke-width: 1.5; }
+
+    .area-usa { fill: var(--usa-navy); opacity: 0.12; }
+    .line-usa { fill: none; stroke: var(--usa-navy); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .dot-usa { fill: var(--usa-navy); stroke: var(--paper); stroke-width: 1.5; }
+
+    .tick-mark { stroke: var(--rule); stroke-width: 0.75; }
+
+    /* hockey stick watermarks */
+    .chart-col { overflow: hidden; }
+    .chart-col--canada::before,
+    .chart-col--usa::before {
+      content: '';
+      position: absolute;
+      inset: 10% 0 5% 8%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: bottom left;
+      opacity: 0.09;
+      z-index: 0;
+    }
+    .chart-col--canada::before { background-image: url('assets/stick-canada.png'); }
+    .chart-col--usa::before { background-image: url('assets/stick-usa.png'); }
+    .chart-col > * { position: relative; z-index: 1; }
+
+    /* ═══════════════════════════════════════
+       SECTION DIVIDER
+       ═══════════════════════════════════════ */
+    .section-rule {
+      border: none;
+      height: 1px;
+      background: var(--rule);
+      margin: 0 var(--pad);
+    }
+
+    /* ═══════════════════════════════════════
+       UPDATES
+       ═══════════════════════════════════════ */
+    .updates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: clamp(1.5rem, 3vw, 3rem) var(--pad);
+      gap: 0;
+    }
+
+    .update-col {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .update-col--canada {
+      padding-right: clamp(1rem, 3vw, 3rem);
+      border-right: 1px solid var(--rule);
+    }
+    .update-col--usa {
+      padding-left: clamp(1rem, 3vw, 3rem);
+    }
+
+    .update-headline {
+      font-weight: 800;
+      font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--ink);
+    }
+    .update-headline--canada { border-bottom-color: var(--canada); }
+    .update-headline--usa { border-bottom-color: var(--usa-navy); }
+
+    .update-text {
+      font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+      line-height: 1.65;
+      color: var(--ink-mid);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .update-text p + p { margin-top: 0.8em; }
+    .update-text strong { color: var(--ink); font-weight: 600; }
+
+    .milestone {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.9rem 0.65em 0.3em;
+      font-size: clamp(0.62rem, 1vw, 0.7rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 2px;
+    }
+    .milestone--canada {
+      background: var(--canada-tint);
+      color: var(--canada-deep);
+      border-left: 2px solid var(--canada);
+    }
+    .milestone--usa {
+      background: var(--usa-tint);
+      color: var(--usa-navy);
+      border-left: 2px solid var(--usa-navy);
+    }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ */
+    .footer {
+      background: var(--arena);
+      padding: 1.2rem var(--pad);
+      text-align: center;
+    }
+    .footer-brand {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.08em;
+    }
+    .footer-brand b { color: #EB1000; font-weight: 600; }
+
+    /* ═══════════════════════════════════════
+       ANIMATIONS
+       ═══════════════════════════════════════ */
+    .anim {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    body.revealed .anim { opacity: 1; transform: translateY(0); }
+    body.revealed .d1 { transition-delay: 0.12s; }
+    body.revealed .d2 { transition-delay: 0.24s; }
+    body.revealed .d3 { transition-delay: 0.38s; }
+    body.revealed .d4 { transition-delay: 0.52s; }
+    body.revealed .d5 { transition-delay: 0.66s; }
+    body.revealed .d6 { transition-delay: 0.8s; }
+    body.revealed .d7 { transition-delay: 1.8s; }
+    body.revealed .d8 { transition-delay: 2.0s; }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE — mobile-first stacking
+       ═══════════════════════════════════════ */
+    @media (max-width: 680px) {
+      .matchup,
+      .charts,
+      .updates {
+        grid-template-columns: 1fr;
+      }
+
+      /* Canada columns: remove right border, add bottom spacing */
+      .team-col--canada,
+      .chart-col--canada,
+      .update-col--canada {
+        padding-right: 0;
+        border-right: none;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      /* USA columns: remove left padding */
+      .team-col--usa,
+      .chart-col--usa,
+      .update-col--usa {
+        padding-left: 0;
+      }
+
+      /* Bigger stat numbers on mobile — full width to breathe */
+      .stat-big { font-size: clamp(3.5rem, 18vw, 5.5rem); }
+
+      /* Chart titles */
+      .chart-title { font-size: 0.78rem; }
+
+      /* Hide watermarks on small screens — too busy */
+      .chart-col--canada::before,
+      .chart-col--usa::before { display: none; }
+
+      /* Update text slightly larger for readability */
+      .update-text { font-size: 0.88rem; }
+
+      /* Milestone full width */
+      .milestone { display: block; }
+    }
+
+    /* Tablet tweaks */
+    @media (min-width: 681px) and (max-width: 1024px) {
+      .stat-big { font-size: clamp(3rem, 7vw, 5rem); }
+    }
+
+    /* Wide desktop — cap content width for readability */
+    @media (min-width: 1400px) {
+      .matchup,
+      .charts,
+      .updates {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .section-rule {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .update-text { font-size: 0.95rem; }
+    }
+
+    /* ═══════════════════════════════════════
+       REDUCED MOTION
+       ═══════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+      .anim { opacity: 1; transform: none; }
+      .chart-data { clip-path: none; }
+    }
+
+    /* ═══════════════════════════════════════
+       PRINT
+       ═══════════════════════════════════════ */
+    @media print {
+      body { background: white; }
+      .poster { box-shadow: none; }
+      .anim { opacity: 1 !important; transform: none !important; }
+      .chart-data { clip-path: none !important; }
+      .team-stripe, .hero, .footer, .stat-sub, .milestone {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="poster">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <header class="hero">
+    <div class="anim">
+      <div class="hero-pre">Engineered AEM Growth</div>
+    </div>
+    <hr class="hero-rule anim d1">
+    <div class="anim d2">
+      <h1 class="hero-title">2026 Hockey Sticks</h1>
+    </div>
+    <div class="anim d3">
+      <span class="hero-stamp">Olympic Final Edition</span>
+    </div>
+    <div class="anim d4">
+      <div class="hero-matchup">
+        <span class="t-canada">Canada</span><span class="t-vs">vs</span><span class="t-usa">USA</span>
+      </div>
+    </div>
+    <div class="anim d5">
+      <div class="hero-venue">February 22, 2026</div>
+    </div>
+  </header>
+
+  <!-- ═══════════ TEAM STRIPE ═══════════ -->
+  <div class="team-stripe">
+    <span class="ts-canada"></span>
+    <span class="ts-usa"></span>
+  </div>
+
+  <!-- ═══════════ MATCHUP: Badges + Stats ═══════════ -->
+  <section class="matchup">
+    <!-- CANADA -->
+    <div class="team-col team-col--canada">
+      <div class="team-header anim d4">
+        <img src="assets/canada-badge.png" alt="" class="team-badge team-badge--canada" onerror="this.dataset.failed=1">
+        <div class="team-name team-name--canada">Experience<br>Modernization Agent</div>
+      </div>
+      <div class="anim d5">
+        <div class="stat-big stat-big--canada" data-count="292">0</div>
+        <div class="stat-label">Users Enabled</div>
+        <span class="stat-sub stat-sub--canada">25% Successful Migrations</span>
+      </div>
+    </div>
+
+    <!-- USA -->
+    <div class="team-col team-col--usa">
+      <div class="team-header anim d4">
+        <img src="assets/usa-badge.png" alt="" class="team-badge team-badge--usa" onerror="this.dataset.failed=1">
+        <div class="team-name team-name--usa">Digital<br>Insights</div>
+      </div>
+      <div class="anim d5">
+        <div class="stat-big stat-big--usa" data-count="425">0</div>
+        <div class="stat-label">Reports Delivered</div>
+        <span class="stat-sub stat-sub--usa">+183% in 50 Days</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CHARTS ═══════════ -->
+  <section class="charts">
+
+    <!-- CANADA CHART -->
+    <div class="chart-col chart-col--canada">
+      <div class="chart-title chart-title--canada anim d6">Cumulative Provisioned Users</div>
+      <svg class="chart-svg" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
+        <line class="grid-line" x1="55" y1="185" x2="385" y2="185"/>
+        <line class="grid-line" x1="55" y1="128" x2="385" y2="128"/>
+        <line class="grid-line" x1="55" y1="72" x2="385" y2="72"/>
+        <line class="grid-line" x1="55" y1="15" x2="385" y2="15"/>
+
+        <text class="axis-label" x="50" y="188" text-anchor="end">0</text>
+        <text class="axis-label" x="50" y="131" text-anchor="end">100</text>
+        <text class="axis-label" x="50" y="75" text-anchor="end">200</text>
+        <text class="axis-label" x="50" y="18" text-anchor="end">300</text>
+
+        <line class="tick-mark" x1="55" y1="185" x2="55" y2="191"/>
+        <line class="tick-mark" x1="99" y1="185" x2="99" y2="191"/>
+        <line class="tick-mark" x1="142" y1="185" x2="142" y2="191"/>
+        <line class="tick-mark" x1="185" y1="185" x2="185" y2="191"/>
+        <line class="tick-mark" x1="229" y1="185" x2="229" y2="191"/>
+        <line class="tick-mark" x1="271" y1="185" x2="271" y2="191"/>
+        <line class="tick-mark" x1="315" y1="185" x2="315" y2="191"/>
+        <line class="tick-mark" x1="375" y1="185" x2="375" y2="191"/>
+
+        <text class="month-label" x="55" y="202">Jul</text>
+        <text class="month-label" x="99" y="202">Aug</text>
+        <text class="month-label" x="142" y="202">Sep</text>
+        <text class="month-label" x="185" y="202">Oct</text>
+        <text class="month-label" x="229" y="202">Nov</text>
+        <text class="month-label" x="271" y="202">Dec</text>
+        <text class="month-label" x="315" y="202">Jan</text>
+        <text class="month-label" x="375" y="202">Feb</text>
+
+        <g class="chart-data">
+          <path class="area-canada" d="M 55 185 C 62 184 86 179 99 177 C 112 175 129 171 142 169 C 155 167 172 163 185 161 C 198 159 216 155 229 153 C 242 151 263 147 271 145 C 279 143 278 143 281 142 C 284 141 287 139 290 138 C 293 137 297 135 300 134 C 303 133 307 132 310 131 C 313 130 318 130 320 128 C 322 127 324 123 325 121 C 327 119 329 116 330 114 C 332 112 334 111 335 109 C 337 107 339 105 340 103 C 342 101 344 99 345 97 C 347 95 349 95 350 92 C 352 89 354 80 355 75 C 357 70 359 63 360 58 C 362 53 364 47 365 43 C 367 39 368 32 370 29 C 372 26 375 25 377 23 C 379 21 384 19 385 18 L 385 185 Z"/>
+          <path class="line-canada" d="M 55 185 C 62 184 86 179 99 177 C 112 175 129 171 142 169 C 155 167 172 163 185 161 C 198 159 216 155 229 153 C 242 151 263 147 271 145 C 279 143 278 143 281 142 C 284 141 287 139 290 138 C 293 137 297 135 300 134 C 303 133 307 132 310 131 C 313 130 318 130 320 128 C 322 127 324 123 325 121 C 327 119 329 116 330 114 C 332 112 334 111 335 109 C 337 107 339 105 340 103 C 342 101 344 99 345 97 C 347 95 349 95 350 92 C 352 89 354 80 355 75 C 357 70 359 63 360 58 C 362 53 364 47 365 43 C 367 39 368 32 370 29 C 372 26 375 25 377 23 C 379 21 384 19 385 18"/>
+          <circle class="dot-canada" cx="55" cy="185" r="3"/>
+          <circle class="dot-canada" cx="99" cy="177" r="3"/>
+          <circle class="dot-canada" cx="142" cy="169" r="3"/>
+          <circle class="dot-canada" cx="185" cy="161" r="3"/>
+          <circle class="dot-canada" cx="229" cy="153" r="3"/>
+          <circle class="dot-canada" cx="271" cy="145" r="3"/>
+          <circle class="dot-canada" cx="310" cy="131" r="3"/>
+          <circle class="dot-canada" cx="360" cy="58" r="3"/>
+          <circle class="dot-canada" cx="385" cy="18" r="4"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- USA CHART -->
+    <div class="chart-col chart-col--usa">
+      <div class="chart-title chart-title--usa anim d6">Cumulative Report Requests</div>
+      <svg class="chart-svg" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
+        <line class="grid-line" x1="55" y1="185" x2="385" y2="185"/>
+        <line class="grid-line" x1="55" y1="128" x2="385" y2="128"/>
+        <line class="grid-line" x1="55" y1="72" x2="385" y2="72"/>
+        <line class="grid-line" x1="55" y1="15" x2="385" y2="15"/>
+
+        <text class="axis-label" x="50" y="188" text-anchor="end">0</text>
+        <text class="axis-label" x="50" y="131" text-anchor="end">150</text>
+        <text class="axis-label" x="50" y="75" text-anchor="end">300</text>
+        <text class="axis-label" x="50" y="18" text-anchor="end">450</text>
+
+        <line class="tick-mark" x1="55" y1="185" x2="55" y2="191"/>
+        <line class="tick-mark" x1="99" y1="185" x2="99" y2="191"/>
+        <line class="tick-mark" x1="142" y1="185" x2="142" y2="191"/>
+        <line class="tick-mark" x1="185" y1="185" x2="185" y2="191"/>
+        <line class="tick-mark" x1="229" y1="185" x2="229" y2="191"/>
+        <line class="tick-mark" x1="271" y1="185" x2="271" y2="191"/>
+        <line class="tick-mark" x1="315" y1="185" x2="315" y2="191"/>
+        <line class="tick-mark" x1="375" y1="185" x2="375" y2="191"/>
+
+        <text class="month-label" x="55" y="202">Jul</text>
+        <text class="month-label" x="99" y="202">Aug</text>
+        <text class="month-label" x="142" y="202">Sep</text>
+        <text class="month-label" x="185" y="202">Oct</text>
+        <text class="month-label" x="229" y="202">Nov</text>
+        <text class="month-label" x="271" y="202">Dec</text>
+        <text class="month-label" x="315" y="202">Jan</text>
+        <text class="month-label" x="375" y="202">Feb</text>
+
+        <g class="chart-data">
+          <path class="area-usa" d="M 55 157 C 62 156 86 154 99 151 C 112 148 129 140 142 138 C 155 136 172 137 185 136 C 198 135 216 133 229 132 C 242 131 263 129 271 128 C 279 127 278 128 281 128 C 284 128 288 128 291 128 C 294 128 297 127 300 126 C 303 126 307 125 310 123 C 313 121 317 118 320 113 C 323 108 327 98 330 91 C 333 88 337 74 340 68 C 343 66 347 57 350 53 C 353 51 357 44 360 41 C 363 40 367 36 370 34 C 373 33 377 30 379 28 C 381 27 384 25 385 24 L 385 185 L 55 185 Z"/>
+          <path class="line-usa" d="M 55 157 C 62 156 86 154 99 151 C 112 148 129 140 142 138 C 155 136 172 137 185 136 C 198 135 216 133 229 132 C 242 131 263 129 271 128 C 279 127 278 128 281 128 C 284 128 288 128 291 128 C 294 128 297 127 300 126 C 303 126 307 125 310 123 C 313 121 317 118 320 113 C 323 108 327 98 330 91 C 333 88 337 74 340 68 C 343 66 347 57 350 53 C 353 51 357 44 360 41 C 363 40 367 36 370 34 C 373 33 377 30 379 28 C 381 27 384 25 385 24"/>
+          <circle class="dot-usa" cx="55" cy="157" r="3"/>
+          <circle class="dot-usa" cx="99" cy="151" r="3"/>
+          <circle class="dot-usa" cx="142" cy="138" r="3"/>
+          <circle class="dot-usa" cx="185" cy="136" r="3"/>
+          <circle class="dot-usa" cx="229" cy="132" r="3"/>
+          <circle class="dot-usa" cx="271" cy="128" r="3"/>
+          <circle class="dot-usa" cx="300" cy="126" r="3"/>
+          <circle class="dot-usa" cx="360" cy="41" r="3"/>
+          <circle class="dot-usa" cx="385" cy="24" r="4"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════ DIVIDER ═══════════ -->
+  <hr class="section-rule">
+
+  <!-- ═══════════ UPDATES ═══════════ -->
+  <section class="updates">
+
+    <!-- CANADA UPDATE -->
+    <div class="update-col update-col--canada anim d7">
+      <div class="update-headline update-headline--canada">Experience Modernization Agent</div>
+      <div class="update-text">
+        <p>After engaging successive waves of early adopters — co-innovating, implementing feedback, and validating success across <strong>12 real customer migrations</strong> — we opened access to the new Experience Catalyst implementation in <strong>December 2025</strong> and began onboarding internal users (SCs, ACS).</p>
+        <p><strong>Current state:</strong> 292 users enabled, mostly in learning phase. <strong>25% have successfully migrated pages and assets.</strong></p>
+        <p><strong>Intelligence layer</strong> is being added to increase conversion success.</p>
+        <div class="milestone milestone--canada">Next: Onboarding Gold & Silver Partners &rarr; Expanding PLG Motion</div>
+      </div>
+    </div>
+
+    <!-- USA UPDATE -->
+    <div class="update-col update-col--usa anim d8">
+      <div class="update-headline update-headline--usa">Digital Insights</div>
+      <div class="update-text">
+        <p>After partnering with the <strong>EMEA sales team</strong> to conceive and refine the format, we expanded to the <strong>global team</strong> — encountering immediate high interest as a powerful tool for <strong>pipeline acceleration and deal close</strong>.</p>
+        <p>Grew steadily to <strong>~150 reports</strong> through end of 2025. In the <strong>first 50 days of 2026, we surged to 425 reports</strong> — a 183% increase driven by global adoption.</p>
+        <p>Working with <strong>SalesOps</strong> to programmatically collect sales &amp; customer feedback, identify attributed impact, and improve the service at scale.</p>
+        <div class="milestone milestone--usa">Next: SalesOps Integration &rarr; Programmatic Feedback Collection</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="footer-brand"><b>Adobe</b> Experience Manager &mdash; Engineered Growth</div>
+  </footer>
+
+</div><!-- .poster -->
+
+<script>
+(function () {
+  'use strict';
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      document.body.classList.add('revealed');
+    }, 250);
+
+    setTimeout(function () {
+      var counters = document.querySelectorAll('[data-count]');
+      counters.forEach(function (el) {
+        var target = parseInt(el.dataset.count, 10);
+        var start = performance.now();
+        var duration = 1600;
+        function tick(now) {
+          var elapsed = now - start;
+          var progress = Math.min(elapsed / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 4);
+          el.textContent = Math.round(eased * target).toLocaleString();
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+    }, 1100);
+  });
+})();
+</script>
+</body>
+</html>
